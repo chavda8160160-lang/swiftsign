@@ -1,0 +1,18 @@
+{
+  "name": "swiftsign",
+  "version": "1.0.0",
+  "description": "Sign documents privately. No account. No upload. Zero watermark.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "pdf",
+    "signature",
+    "digital-signature",
+    "privacy",
+    "offline"
+  ],
+  "author": "SwiftSign",
+  "license": "MIT"
+}

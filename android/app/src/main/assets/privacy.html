@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="SwiftSign Privacy Policy - 100% on-device processing. No document uploads, zero tracking.">
+  <title>Privacy Policy - SwiftSign</title>
+  <link rel="stylesheet" href="src/css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="src/assets/icon.svg">
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background: var(--slate-50);">
+
+  <header class="app-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" aria-label="SwiftSign Home">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+            <path d="M2 2l7.586 7.586"></path>
+          </svg>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span class="brand-name">SwiftSign</span>
+          <span class="brand-badge">100% Offline & Private</span>
+        </div>
+      </a>
+      <div class="header-actions">
+        <nav class="desktop-nav-links" aria-label="Main Navigation">
+          <a href="plans.html" class="nav-link">Plans</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="privacy.html" class="nav-link" style="color: var(--primary);">Privacy</a>
+          <a href="contact.html" class="nav-link">Contact</a>
+        </nav>
+        <a href="index.html" class="btn-back-tool" style="padding: 0.4rem 0.85rem; font-size: 0.85rem;">← Back to Tool</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex: 1;">
+    <div class="static-page-container">
+      <div class="static-back-bar">
+        <a href="index.html" class="btn-back-tool">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back to SwiftSign Tool
+        </a>
+      </div>
+
+      <div class="static-card">
+        <h1>SwiftSign Privacy Policy</h1>
+        <div class="static-subtitle">Effective Date: November 20, 2026 • Version 1.0.0</div>
+
+        <div class="plans-notice-box" style="background: #f0fdf4; border-color: #bbf7d0; color: #166534;">
+          <strong>Core Privacy Principle:</strong><br>
+          Documents are processed locally on your device. No document uploads to SwiftSign servers. No account required.
+        </div>
+
+        <h2>1. Document Processing on Your Local Device</h2>
+        <p>
+          SwiftSign operates entirely within your local browser sandbox or within the SwiftSign Android application sandbox. When you select, open, sign, stamp, or export a PDF or image document:
+        </p>
+        <ul>
+          <li>Your file bytes are loaded directly into local memory on your device using client-side WebAssembly and JavaScript engines (PDF-lib and PDF.js).</li>
+          <li>Your document content is <strong>never uploaded, transmitted, or streamed</strong> to any SwiftSign server or remote cloud storage.</li>
+          <li>SwiftSign operates with zero remote document processing backends. All rendering, signature composition, stamp generation, and PDF stream reconstruction happen on your CPU/GPU.</li>
+        </ul>
+
+        <h2>2. On-Device Storage of Signatures, Stamps & Profiles</h2>
+        <p>
+          Any signatures you draw or scan, company stamps you design, and company profiles you create are stored strictly inside your local device's private application storage:
+        </p>
+        <ul>
+          <li><strong>Web:</strong> Saved in your browser's private local WebStorage. Clearing your browser data clears your saved items.</li>
+          <li><strong>Android App:</strong> Saved inside the app's private SharedPreferences vault. This data is explicitly <strong>excluded from Google Drive Auto Backup and Android cloud data extraction</strong> via our application backup rules XML. Your signatures and stamp assets never sync to third-party cloud accounts.</li>
+          <li><strong>Permanent Erasure:</strong> You can permanently wipe all signatures, stamps, company profiles, and recent file records at any time using the "Delete All My Data" button in Settings.</li>
+        </ul>
+
+        <h2>3. Billing & Payments (Android App Only)</h2>
+        <p>
+          The web version of SwiftSign is Free forever with no payment processing. In the Android app, Pro subscriptions are processed directly and securely through the <strong>Google Play Billing system</strong>:
+        </p>
+        <ul>
+          <li>SwiftSign does not collect, receive, or store your credit card numbers, bank account numbers, or billing addresses. All payment transactions and subscriptions are governed by Google's Privacy Policy and Google Play Terms of Service.</li>
+          <li>Entitlements are verified directly on your device via the official Google Play Billing Library.</li>
+        </ul>
+
+        <h2>4. No Analytics, No Ads, No Third-Party Tracking</h2>
+        <p>
+          SwiftSign contains:
+        </p>
+        <ul>
+          <li><strong>Zero advertising SDKs:</strong> No Google AdMob, Unity Ads, Facebook Audience Network, or other advertising trackers.</li>
+          <li><strong>Zero analytics trackers:</strong> No Google Analytics, Firebase Analytics, Mixpanel, Amplitude, or behavioral trackers.</li>
+          <li><strong>Zero third-party telemetry:</strong> We do not log which documents you sign, who you send them to, or how often you use the app.</li>
+        </ul>
+
+        <h2>5. Network Requests</h2>
+        <p>
+          The only network communication that can occur within SwiftSign is:
+        </p>
+        <ul>
+          <li><strong>Android App:</strong> Communication between the Google Play Billing Library and Google Play services to retrieve subscription status or complete in-app purchases.</li>
+          <li><strong>Web:</strong> Standard HTTP request to download the static HTML, CSS, and JS files from your web host. Once loaded, the application works offline through standard browser caching.</li>
+        </ul>
+
+        <h2>6. Mandatory Legal Disclaimer</h2>
+        <div class="legal-notice" style="background: var(--slate-50); border: 1px solid var(--slate-200); padding: 1rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; color: var(--slate-600); line-height: 1.5; margin: 1.5rem 0;">
+          SwiftSign creates graphical electronic signatures and business stamps for everyday documents. Acceptance and legal requirements for electronic signatures vary by document type and jurisdiction. SwiftSign does not provide cryptographic digital signatures, certificate-based signing, notarization or legal advice.
+        </div>
+
+        <h2>7. Contact & Privacy Inquiries</h2>
+        <p>
+          If you have questions regarding this privacy policy or our local on-device architecture, please reach out to us at:
+        </p>
+        <p>
+          <strong>Email:</strong> <a href="mailto:support@swiftsign.app" style="color: var(--primary); font-weight: 700;">support@swiftsign.app</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-claims-row">
+        <span class="footer-claim-badge">🔒 Documents are processed locally on your device</span>
+        <span class="footer-claim-badge">🛡️ No document uploads to SwiftSign servers</span>
+        <span class="footer-claim-badge">👤 No account required</span>
+      </div>
+      <div class="footer-links-row">
+        <a href="plans.html" class="footer-link">Plans</a>
+        <a href="privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="terms.html" class="footer-link">Terms</a>
+        <a href="disclaimer.html" class="footer-link">Disclaimer</a>
+        <a href="about.html" class="footer-link">About</a>
+        <a href="contact.html" class="footer-link">Contact</a>
+        <button type="button" class="btn-get-android-app footer-link" style="background: none; border: none; cursor: pointer; color: var(--primary);">📱 Get the Android app</button>
+      </div>
+      <div class="footer-copyright">
+        © 2026 SwiftSign™. All rights reserved.<br>
+        SwiftSign™ is a graphical electronic signature and business stamp utility.
+      </div>
+    </div>
+  </footer>
+
+  <script src="src/js/pricing-config.js"></script>
+  <script>
+    document.querySelectorAll('.btn-get-android-app').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = (typeof PricingConfig !== 'undefined' && PricingConfig.playStoreUrl) ? PricingConfig.playStoreUrl : '';
+        if (url && url.length > 0) {
+          window.open(url, '_blank');
+        } else {
+          alert('SwiftSign Android App: Coming soon to Google Play!');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

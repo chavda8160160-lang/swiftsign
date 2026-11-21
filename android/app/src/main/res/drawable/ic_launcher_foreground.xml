@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Quill / Signature Pen Icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,28 C50,34 44,45 42,54 C40,61 38,68 35,76 L40,78 C44,70 48,64 53,58 C57,53 64,44 68,36 C72,28 66,24 54,28 Z" />
+    <path
+        android:fillColor="#E0E7FF"
+        android:pathData="M35,76 L32,83 L39,80 Z" />
+    <!-- Signature swoosh underneath -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M30,85 C42,83 60,86 78,81" />
+</vector>

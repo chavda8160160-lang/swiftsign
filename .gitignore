@@ -1,0 +1,21 @@
+# Node & Dependencies
+node_modules/
+npm-debug.log*
+
+# Android build outputs & cache
+.gradle/
+android/.gradle/
+android/.gradle_home/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+*.jks
+*.keystore
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml

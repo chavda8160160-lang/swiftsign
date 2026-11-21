@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SwiftSign — Sign PDFs & Documents Privately</title>
+  <meta name="description" content="Add your signature to PDFs and images with zero quality loss. 100% client-side, completely private, no account required, no watermark.">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="src/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563eb%22/><text y=%2268%22 x=%2218%22 font-size=%2260%22>✍️</text></svg>">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+            <path d="M2 2l7.586 7.586"></path>
+            <circle cx="11" cy="11" r="2"></circle>
+          </svg>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span class="brand-name">SwiftSign</span>
+          <span class="brand-badge" data-i18n="privacy_badge">100% Offline & Private</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <nav class="desktop-nav-links" aria-label="Main Navigation">
+          <a href="plans.html" class="nav-link">Plans</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="privacy.html" class="nav-link">Privacy</a>
+          <a href="contact.html" class="nav-link">Contact</a>
+        </nav>
+        <button id="btn-open-settings" class="pricing-btn" style="background: #f8fafc; color: var(--slate-700); border-color: var(--slate-300);" title="Data, Profiles & Privacy">⚙️ Settings</button>
+        <button id="btn-open-pricing" class="pricing-btn" title="View Plans">Plans</button>
+        <button type="button" id="btn-open-menu" class="hamburger-btn" aria-label="Open Navigation Menu" title="Menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main style="flex: 1; display: flex; flex-direction: column;">
+    
+    <!-- Welcome / Upload Screen -->
+    <section id="welcome-screen" class="welcome-section">
+
+      <!-- PRIMARY: Upload / Choose Document Section (FIRST!) -->
+      <div id="dropzone" class="dropzone-card primary-dropzone">
+        <div class="hero-pill" style="margin-bottom: 0.65rem;">
+          <span>🔒 Documents Processed Locally on Your Device • No Server Uploads</span>
+        </div>
+        <div class="dropzone-icon">
+          <svg viewBox="0 0 24 24" width="36" height="36" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <h2 class="dropzone-title" data-i18n="btn_select_file" style="margin: 0.35rem 0 0.25rem; font-size: 1.25rem;">Choose Document (PDF or Image)</h2>
+        <p class="dropzone-desc" data-i18n="drag_drop_hint" style="margin-bottom: 0.75rem;">Tap to select PDF, JPG, PNG or WebP • 100% on-device & private</p>
+        <button type="button" class="btn-primary-action dropzone-select-btn" onclick="document.getElementById('file-input').click()">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          Select Document
+        </button>
+        <input type="file" id="file-input" accept="application/pdf,image/png,image/jpeg,image/webp" style="display:none;" />
+
+        <div class="sample-row" style="margin-top: 0.75rem; margin-bottom: 0;">
+          <span style="font-size: 0.82rem; color: var(--slate-500);">Don't have a file ready?</span>
+          <button id="btn-try-sample" class="btn-text-link" data-i18n="btn_try_sample">Try Sample Document</button>
+        </div>
+      </div>
+
+      <!-- Quick Fast-Action Tools Divider -->
+      <div class="home-tools-header">
+        <div class="home-tools-title">
+          <span>⚡ Quick Business Tools</span>
+        </div>
+      </div>
+
+      <!-- Home Action Cards Grid (6 Entry Points) -->
+      <div class="home-actions-container">
+        <div class="home-actions-grid">
+          
+          <!-- 1. Create Company Stamp (Featured) -->
+          <div class="home-action-card featured-card" id="card-create-stamp">
+            <div class="card-icon-wrapper card-icon-stamp">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2">
+                <circle cx="12" cy="12" r="9"></circle>
+                <circle cx="12" cy="12" r="5" stroke-dasharray="2 2"></circle>
+                <polygon points="12 8 13.2 10.8 16 11.2 14 13.2 14.5 16 12 14.5 9.5 16 10 13.2 8 11.2 10.8 10.8"></polygon>
+              </svg>
+            </div>
+            <div class="card-header-row">
+              <h3>Create Company Stamp</h3>
+              <span class="card-pill pill-primary">HQ PNG</span>
+            </div>
+            <p class="card-desc">Round seals & rectangular stamps with 11 business templates. Export transparent PNG (1800px).</p>
+          </div>
+
+          <!-- 2. Sign PDF -->
+          <div class="home-action-card" id="card-sign-pdf">
+            <div class="card-icon-wrapper card-icon-sign">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <path d="M12 18l4-4-4-4"></path>
+                <path d="M8 14h8"></path>
+              </svg>
+            </div>
+            <div class="card-header-row">
+              <h3>Sign PDF</h3>
+              <span class="card-pill pill-success">Free</span>
+            </div>
+            <p class="card-desc">Open any PDF and place handwritten signatures, dates & custom text without quality loss.</p>
+          </div>
+
+          <!-- 3. Add Stamp to PDF -->
+          <div class="home-action-card" id="card-stamp-pdf">
+            <div class="card-icon-wrapper card-icon-add-stamp">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <circle cx="12" cy="15" r="4"></circle>
+              </svg>
+            </div>
+            <div class="card-header-row">
+              <h3>Add Stamp to PDF</h3>
+            </div>
+            <p class="card-desc">Choose a PDF and immediately stamp company seals, approval or payment marks onto pages.</p>
+          </div>
+
+          <!-- 4. Image to PDF -->
+          <div class="home-action-card" id="card-image-to-pdf">
+            <div class="card-icon-wrapper card-icon-img-pdf">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <div class="card-header-row">
+              <h3>Image to PDF</h3>
+              <span class="card-pill pill-primary">New</span>
+            </div>
+            <p class="card-desc">Convert single or multiple images/photos into clean, shareable PDF documents.</p>
+          </div>
+
+          <!-- 5. Saved Signatures -->
+          <div class="home-action-card" id="card-saved-signatures">
+            <div class="card-icon-wrapper card-icon-sigs">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2">
+                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+              </svg>
+            </div>
+            <div class="card-header-row">
+              <h3>Saved Signatures</h3>
+            </div>
+            <p class="card-desc">Manage your drawn or scanned signatures for instant 1-tap signing.</p>
+          </div>
+
+          <!-- 6. Saved Stamps -->
+          <div class="home-action-card" id="card-saved-stamps">
+            <div class="card-icon-wrapper card-icon-stamps">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <line x1="7" y1="8" x2="17" y2="8"></line>
+                <line x1="7" y1="12" x2="17" y2="12"></line>
+                <line x1="7" y1="16" x2="13" y2="16"></line>
+              </svg>
+            </div>
+            <div class="card-header-row">
+              <h3>Saved Stamps</h3>
+            </div>
+            <p class="card-desc">Access your saved company stamps and export them anytime to WhatsApp or Word.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Value Proposition Highlights -->
+      <div class="features-grid">
+        <div class="feature-box">
+          <h4 data-i18n="feat_1_title">⚡ Fast & Simple</h4>
+          <p data-i18n="feat_1_desc">Sign contracts, NDAs, offer letters, or invoices in under 10 seconds. No account needed.</p>
+        </div>
+        <div class="feature-box">
+          <h4 data-i18n="feat_2_title">🔒 100% On-Device Privacy</h4>
+          <p data-i18n="feat_2_desc">Documents are processed locally on your device. No document uploads to SwiftSign servers.</p>
+        </div>
+        <div class="feature-box">
+          <h4 data-i18n="feat_3_title">💎 True Vector Quality</h4>
+          <p data-i18n="feat_3_desc">Text stays crisp and selectable. Never rasterized into blurry screenshots or degraded.</p>
+        </div>
+        <div class="feature-box">
+          <h4 data-i18n="feat_4_title">🚫 Zero Watermarks</h4>
+          <p data-i18n="feat_4_desc">Clean, professional output ready for clients, employers, banks, and legal paperwork.</p>
+        </div>
+      </div>
+
+      <!-- Global Footer -->
+      <footer class="site-footer">
+        <div class="footer-container">
+          <!-- Approved Privacy Claims -->
+          <div class="footer-claims-row">
+            <span class="footer-claim-badge">🔒 Documents are processed locally on your device</span>
+            <span class="footer-claim-badge">🛡️ No document uploads to SwiftSign servers</span>
+            <span class="footer-claim-badge">👤 No account required</span>
+          </div>
+
+          <!-- Footer Navigation Links -->
+          <div class="footer-links-row">
+            <a href="plans.html" class="footer-link">Plans</a>
+            <a href="privacy.html" class="footer-link">Privacy Policy</a>
+            <a href="terms.html" class="footer-link">Terms</a>
+            <a href="disclaimer.html" class="footer-link">Disclaimer</a>
+            <a href="about.html" class="footer-link">About</a>
+            <a href="contact.html" class="footer-link">Contact</a>
+            <button type="button" class="btn-get-android-app footer-link" style="background: none; border: none; cursor: pointer; color: var(--primary);">📱 Get the Android app</button>
+          </div>
+
+          <!-- Copyright Notice -->
+          <div class="footer-copyright">
+            © 2026 SwiftSign™. All rights reserved.<br>
+            SwiftSign™ is a graphical electronic signature and business stamp utility.
+          </div>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Editor Screen -->
+    <section id="editor-screen" class="editor-wrapper">
+      
+      <!-- Top Editor Toolbar -->
+      <div class="editor-toolbar" id="editor-toolbar">
+        <div class="toolbar-group">
+          <button id="btn-reset-doc" class="tool-btn" title="Close document" data-i18n="btn_clear_all">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Close
+          </button>
+          <div class="page-indicator-badge" id="page-indicator">Page 1 of 1</div>
+          <button id="btn-prev-page" class="tool-btn" title="Previous Page" data-i18n="btn_prev_page">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button id="btn-next-page" class="tool-btn" title="Next Page" data-i18n="btn_next_page">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <div class="toolbar-group right-toolbar-actions">
+          <button id="btn-undo-placement" class="tool-btn" title="Undo Placement (Ctrl+Z)">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path>
+            </svg>
+            Undo
+          </button>
+        </div>
+
+        <div class="toolbar-group zoom-controls">
+          <button id="btn-zoom-out" class="tool-btn" title="Zoom Out" data-i18n="btn_zoom_out">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+          </button>
+          <button id="btn-zoom-in" class="tool-btn" title="Zoom In" data-i18n="btn_zoom_in">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="11" y1="8" x2="11" y2="14"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+          </button>
+          <button id="btn-fit-width" class="tool-btn" title="Fit to Width" data-i18n="btn_fit_width">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+            Fit
+          </button>
+        </div>
+      </div>
+
+      <!-- Document Stage Viewport -->
+      <div class="document-viewport" id="stage-wrapper">
+        <div class="document-stage-container" id="stage-container">
+          <!-- Canvas or Image rendered here -->
+        </div>
+      </div>
+
+      <!-- Quick Annotation Tools Strip -->
+      <div class="quick-tools-bar" id="quick-tools-bar">
+        <button id="btn-quick-sig" class="quick-tool-btn" title="Add Handwritten Signature">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+          </svg>
+          <span>Sign</span>
+        </button>
+        <button id="btn-quick-date" class="quick-tool-btn" title="1-Tap Today's Date">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Date</span>
+        </button>
+        <button id="btn-quick-text" class="quick-tool-btn" title="Add Name or Text">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2">
+            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+            <line x1="9" y1="20" x2="15" y2="20"></line>
+            <line x1="12" y1="4" x2="12" y2="20"></line>
+          </svg>
+          <span>Text</span>
+        </button>
+        <button id="btn-quick-company-stamp" class="quick-tool-btn" title="Official Company Stamp & Seal">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="12" cy="12" r="9"></circle>
+            <circle cx="12" cy="12" r="6" stroke-dasharray="2 2"></circle>
+            <polygon points="12 8 13.2 10.8 16 11.2 14 13.2 14.5 16 12 14.5 9.5 16 10 13.2 8 11.2 10.8 10.8"></polygon>
+          </svg>
+          <span>Stamp</span>
+        </button>
+        <button id="btn-quick-batch-sign" class="quick-tool-btn batch-sign-tool-btn" title="Apply Signature or Stamp to All Pages (PRO)" style="display: none;">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <polyline points="9 14 11 16 15 11"></polyline>
+          </svg>
+          <span>All Pages</span>
+        </button>
+      </div>
+
+      <!-- Bottom Floating Mobile Actions -->
+      <div class="floating-actions-bar">
+        <button id="btn-add-sig" class="btn-sign-now" data-i18n="btn_add_signature">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+            <path d="M2 2l7.586 7.586"></path>
+          </svg>
+          Add Signature
+        </button>
+        <button id="btn-finish-export" class="btn-finish-export" data-i18n="btn_export">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Finish & Sign
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Navigation Drawer (Mobile Web & App Hamburger Menu) -->
+  <div class="nav-drawer-overlay" id="nav-drawer-overlay"></div>
+  <aside class="nav-drawer" id="nav-drawer" aria-label="Navigation Menu">
+    <div class="nav-drawer-header">
+      <h3>
+        <span>✍️</span> SwiftSign
+      </h3>
+      <button type="button" id="btn-close-nav-drawer" class="btn-close-modal" aria-label="Close Navigation Menu">✕</button>
+    </div>
+    <div class="nav-drawer-content">
+      <div class="drawer-section-label">Tools</div>
+      <a href="index.html" class="drawer-nav-item">
+        <span>🏠</span> Home
+      </a>
+      <button type="button" class="drawer-nav-item" onclick="document.getElementById('card-create-stamp').click(); document.getElementById('btn-close-nav-drawer').click();">
+        <span>🏢</span> Create Company Stamp
+      </button>
+      <button type="button" class="drawer-nav-item" onclick="document.getElementById('card-sign-pdf').click(); document.getElementById('btn-close-nav-drawer').click();">
+        <span>✍️</span> Sign PDF
+      </button>
+      <button type="button" class="drawer-nav-item" onclick="document.getElementById('card-img-to-pdf').click(); document.getElementById('btn-close-nav-drawer').click();">
+        <span>🖼️</span> Image to PDF
+      </button>
+      <button type="button" class="drawer-nav-item" onclick="document.getElementById('card-saved-sigs').click(); document.getElementById('btn-close-nav-drawer').click();">
+        <span>📁</span> Saved Signatures
+      </button>
+      <button type="button" class="drawer-nav-item" onclick="document.getElementById('card-saved-stamps').click(); document.getElementById('btn-close-nav-drawer').click();">
+        <span>🏢</span> Saved Stamps
+      </button>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">Account & Plans</div>
+      <a href="plans.html" class="drawer-nav-item">
+        <span>💳</span> Plans (Free vs Pro)
+      </a>
+      <button type="button" class="drawer-nav-item" onclick="document.getElementById('btn-open-settings').click(); document.getElementById('btn-close-nav-drawer').click();">
+        <span>⚙️</span> Settings & Profiles
+      </button>
+
+      <div class="drawer-divider"></div>
+      <div class="drawer-section-label">Information & Legal</div>
+      <a href="privacy.html" class="drawer-nav-item">
+        <span>🔒</span> Privacy Policy
+      </a>
+      <a href="terms.html" class="drawer-nav-item">
+        <span>📜</span> Terms of Service
+      </a>
+      <a href="disclaimer.html" class="drawer-nav-item">
+        <span>⚖️</span> Disclaimer
+      </a>
+      <a href="about.html" class="drawer-nav-item">
+        <span>ℹ️</span> About SwiftSign
+      </a>
+      <a href="contact.html" class="drawer-nav-item">
+        <span>✉️</span> Contact Support
+      </a>
+
+      <div class="drawer-divider"></div>
+      <div style="padding: 0.5rem 0.75rem;">
+        <button type="button" class="btn-primary-action btn-get-android-app" style="width: 100%; justify-content: center; min-height: 48px;">
+          📱 Get the Android app
+        </button>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <strong>SwiftSign v1.0.0</strong><br>
+      Documents processed locally on your device
+    </div>
+  </aside>
+
+  <!-- Modal: Web Pro Locked Feature Notice (Shown when Pro feature is tapped on Web) -->
+  <div class="modal-overlay" id="web-pro-locked-modal">
+    <div class="modal-card" style="max-width: 480px; text-align: center;">
+      <div class="modal-header">
+        <h3 style="margin: 0; display: flex; align-items: center; gap: 0.4rem;">
+          <span>⭐</span> SwiftSign Pro Feature
+        </h3>
+        <button id="btn-close-web-pro-locked" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem 1.25rem;">
+        <div style="width: 56px; height: 56px; margin: 0 auto 1rem; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: #2563eb;">
+          📱
+        </div>
+        <div id="web-pro-reason-text" style="font-weight: 700; font-size: 1rem; color: var(--slate-900); margin-bottom: 0.5rem;">
+          Pro is available in the SwiftSign Android app
+        </div>
+        <p style="font-size: 0.88rem; color: var(--slate-600); line-height: 1.5; margin-bottom: 1.25rem;">
+          SwiftSign on the web is <strong>Free forever</strong> with basic signing, 1 signature, 1 company stamp, and lossless vector PDF export. Advanced Pro features (multi-page batch signing, paper signature scanner, unlimited profiles) are exclusively available in the SwiftSign Android app.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+          <button type="button" class="btn-primary-action btn-get-android-app" style="width: 100%; justify-content: center; min-height: 48px; font-size: 0.95rem; font-weight: 700;">
+            📱 Get the Android app
+          </button>
+          <a href="plans.html" class="tool-btn" style="width: 100%; justify-content: center; min-height: 48px; font-size: 0.9rem; text-decoration: none; font-weight: 600; box-sizing: border-box; display: inline-flex; align-items: center;">
+            📋 Compare Free vs Pro Plans
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Draw / Choose Signature -->
+  <div class="modal-overlay" id="signature-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 data-i18n="modal_sign_title">Create Your Signature</h3>
+        <button id="btn-close-sig-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Mode Tabs: Draw vs Scan Paper (PRO) -->
+        <div class="sig-mode-tabs">
+          <button type="button" class="sig-mode-tab active" id="tab-sig-draw">
+            ✏️ Draw
+          </button>
+          <button type="button" class="sig-mode-tab" id="tab-sig-scan">
+            📷 Scan Paper
+            <span class="pro-badge-pill">PRO</span>
+          </button>
+        </div>
+
+        <!-- Draw Mode Section -->
+        <div id="sig-draw-section">
+          <!-- Canvas Box -->
+          <div class="signature-canvas-container">
+            <canvas id="sig-canvas"></canvas>
+            <div class="signature-baseline"></div>
+          </div>
+
+          <!-- Canvas Tools -->
+          <div class="sig-tools-row">
+            
+            <!-- Color Picker -->
+            <div class="color-picker-group">
+              <div class="color-dot color-black active" data-color="#0f172a" title="Black Ink"></div>
+              <div class="color-dot color-blue" data-color="#1d4ed8" title="Blue Ink"></div>
+            </div>
+
+            <!-- Thickness -->
+            <div class="thickness-group">
+              <button class="thickness-pill" data-thickness="2">Fine</button>
+              <button class="thickness-pill active" data-thickness="3.5">Medium</button>
+              <button class="thickness-pill" data-thickness="5.5">Bold</button>
+            </div>
+
+            <!-- Undo & Clear -->
+            <div style="display: flex; gap: 0.4rem;">
+              <button id="btn-undo-sig" class="tool-btn" data-i18n="btn_undo">↶ Undo</button>
+              <button id="btn-clear-sig" class="tool-btn" data-i18n="btn_clear_canvas">Clear</button>
+            </div>
+
+          </div>
+
+          <!-- Saved Signatures Strip -->
+          <div class="saved-sigs-section">
+            <div class="saved-sigs-title" data-i18n="saved_signatures">Saved Signatures</div>
+            <div class="saved-sigs-scroll" id="saved-sigs-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Paper Scanner Mode Section (PRO) -->
+        <div id="sig-scan-section" style="display: none;">
+          <input type="file" id="scanner-file-input" accept="image/*" capture="environment" style="display: none;" />
+
+          <!-- Initial Dropzone -->
+          <div id="scanner-dropzone" class="scanner-dropzone">
+            <div class="scanner-dropzone-icon">
+              <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" fill="none" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </div>
+            <div style="font-weight: 700; font-size: 0.95rem; color: var(--slate-800); margin-top: 0.35rem;">
+              Take Photo or Choose Paper Image
+            </div>
+            <div style="font-size: 0.78rem; color: var(--slate-500); margin-top: 0.15rem;">
+              Sign on plain white paper with a pen & snap a photo
+            </div>
+            <button type="button" class="btn-primary-action" id="btn-trigger-scan" style="margin-top: 0.6rem; padding: 0.5rem 1.1rem; font-size: 0.85rem; pointer-events: none;">
+              Open Camera / Gallery
+            </button>
+          </div>
+
+          <!-- Processed Result Preview & Controls -->
+          <div id="scanner-result-area" style="display: none;">
+            <div class="scanner-preview-container">
+              <canvas id="scanner-preview-canvas"></canvas>
+              <button type="button" id="btn-retake-scan" class="btn-retake-scan">
+                ↻ Retake
+              </button>
+            </div>
+
+            <div class="scanner-controls-panel">
+              <!-- Sensitivity / Clean-up Slider -->
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <span style="font-size: 0.75rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase;">
+                    Background Clean-up:
+                  </span>
+                  <span id="slider-threshold-label" style="font-size: 0.75rem; font-weight: 700; color: var(--primary);">
+                    Standard
+                  </span>
+                </div>
+                <input type="range" id="scanner-threshold-slider" min="130" max="240" value="190" style="width: 100%; accent-color: var(--primary); cursor: pointer;" />
+              </div>
+
+              <!-- Digital Ink Color Options -->
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase;">
+                  Ink Color:
+                </span>
+                <div class="segmented-toggle-group" id="scanner-ink-color-group">
+                  <button type="button" class="segmented-toggle-btn active" data-color="original">Original</button>
+                  <button type="button" class="segmented-toggle-btn" data-color="#0f172a">Black</button>
+                  <button type="button" class="segmented-toggle-btn" data-color="#1d4ed8">Blue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-sig-device" class="tool-btn" data-i18n="btn_save_signature">Save to Device</button>
+        <button id="btn-apply-sig" class="btn-primary-action" data-i18n="btn_use_signature">Place on Document</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Export Success & Share -->
+  <div class="modal-overlay" id="export-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 data-i18n="modal_export_title">Your Signed Document is Ready!</h3>
+        <button id="btn-close-export-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="export-preview-card">
+          <div class="export-success-icon">
+            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" fill="none" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div class="export-meta-badge" id="export-meta-text">
+            document-signed.pdf (124 KB) • 100% Vector Quality
+          </div>
+          <div class="export-actions-list">
+            <button id="btn-download-export" class="btn-download-pdf">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span id="btn-download-label" data-i18n="btn_download">Download Signed Document</span>
+            </button>
+            <button id="btn-share-export" class="btn-share-pdf">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              <span id="btn-share-label" data-i18n="btn_share">Share via WhatsApp / Email</span>
+            </button>
+            <button id="btn-done-export" class="tool-btn" style="width: 100%; justify-content: center; padding: 0.85rem; font-weight: 600; color: var(--slate-700); border: 1px solid var(--slate-300); background: #f8fafc; border-radius: var(--radius-md); font-size: 0.95rem;">
+              ✓ Done & Sign Another Document
+            </button>
+          </div>
+          <div class="legal-notice" data-i18n="export_disclaimer">
+            SwiftSign creates graphical electronic signatures and business stamps for everyday documents. Acceptance and legal requirements for electronic signatures vary by document type and jurisdiction. SwiftSign does not provide cryptographic digital signatures, certificate-based signing, notarization or legal advice.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Pricing & Plans (Phase 4 Central Paywall) -->
+  <div class="modal-overlay" id="pricing-modal">
+    <div class="modal-card" style="max-width: 720px; max-height: calc(100dvh - 2rem); display: flex; flex-direction: column; overflow: hidden;">
+      <div class="modal-header">
+        <div>
+          <h3 data-i18n="pricing_title" style="margin: 0;">SwiftSign Pro Pass</h3>
+          <span style="font-size: 0.78rem; color: var(--slate-500);">Simple, transparent pricing. No subscriptions without explicit approval.</span>
+        </div>
+        <button id="btn-close-pricing-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Contextual reason banner (shown when user hits a Pro gate) -->
+        <div id="paywall-context-banner" style="display: none; background: #eff6ff; border: 1.5px solid #bfdbfe; color: #1e40af; padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;">
+        </div>
+
+        <!-- Play Store Unavailable Banner with Beta Test Toggle -->
+        <div id="pricing-unavailable-banner" style="background: #eff6ff; border: 1.5px solid #93c5fd; color: #1e40af; padding: 0.85rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;">
+          <div style="margin-bottom: 0.4rem; display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-weight: 700; font-size: 0.9rem;">⚡ Beta Test Mode</span>
+            <span style="font-size: 0.7rem; background: #dbeafe; color: #1e40af; padding: 0.15rem 0.45rem; border-radius: 4px;">NO PLAY CONSOLE REQUIRED</span>
+          </div>
+          <p style="font-size: 0.8rem; margin: 0 0 0.65rem; color: #334155; font-weight: normal;">
+            Google Play purchases are in testing. Tap below to unlock all Pro features for free on your device:
+          </p>
+          <button type="button" id="btn-toggle-test-pro" style="background: #2563eb; color: #ffffff; border: none; border-radius: var(--radius-md); padding: 0.6rem 1.1rem; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; box-shadow: 0 2px 6px rgba(37,99,235,0.3);">
+            <span>⚡ Enable Pro Mode for Testing</span>
+          </button>
+        </div>
+
+        <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          
+          <!-- Free Tier -->
+          <div class="price-card">
+            <div>
+              <div class="price-title" data-i18n="tier_free">Free Forever</div>
+              <div class="price-amount">₹0</div>
+              <ul class="price-features">
+                <li>Unlimited document exports</li>
+                <li>1 saved signature</li>
+                <li>1 saved company stamp</li>
+                <li>Standard round & rectangular stamps</li>
+                <li>Lossless vector PDF & transparent PNG</li>
+                <li>Zero watermark, zero ads</li>
+              </ul>
+            </div>
+            <button type="button" id="btn-choose-free" class="tool-btn" style="width: 100%; justify-content: center;" disabled>Active Plan</button>
+          </div>
+
+          <!-- Pro Monthly -->
+          <div class="price-card">
+            <div>
+              <div class="price-title">Pro Monthly</div>
+              <div class="price-amount"><span id="pricing-monthly-display">₹99</span><span style="font-size: 0.8rem; font-weight: 500; color: var(--slate-500);">/mo</span></div>
+              <div style="font-size: 0.75rem; color: var(--slate-500); margin-top: -0.25rem; margin-bottom: 0.5rem;">Flexible month-to-month</div>
+              <ul class="price-features">
+                <li>Unlimited signatures & stamps</li>
+                <li>Multiple company profiles</li>
+                <li>📷 Paper Signature Scanner</li>
+                <li>Multi-page "Sign All Pages"</li>
+                <li>1800px transparent PNG export</li>
+                <li>All templates & ink finishes</li>
+              </ul>
+            </div>
+            <button type="button" id="btn-choose-pro-monthly" class="btn-primary-action" style="width: 100%; justify-content: center;">Get Monthly</button>
+          </div>
+
+          <!-- Pro Annual -->
+          <div class="price-card featured">
+            <span class="price-badge-rec">POPULAR • SAVE 58%</span>
+            <div>
+              <div class="price-title">Pro Annual</div>
+              <div class="price-amount"><span id="pricing-annual-display">₹499</span><span style="font-size: 0.8rem; font-weight: 500; color: var(--slate-500);">/yr</span></div>
+              <div style="font-size: 0.75rem; color: var(--emerald-600); font-weight: 600; margin-top: -0.25rem; margin-bottom: 0.5rem;">Only ₹41.50/month</div>
+              <ul class="price-features">
+                <li>Everything in Monthly Pro</li>
+                <li>Priority updates</li>
+                <li>Unlimited company profiles</li>
+                <li>Unlimited multi-page signing</li>
+                <li>Save 58% vs monthly billing</li>
+              </ul>
+            </div>
+            <button type="button" id="btn-choose-pro-annual" class="btn-primary-action" style="width: 100%; justify-content: center;">Get Annual</button>
+          </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 1.25rem;">
+          <button type="button" id="btn-restore-purchases" style="background: none; border: none; color: var(--brand-blue); font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline;">
+            Already have a plan? Restore Purchases
+          </button>
+        </div>
+
+        <div class="legal-notice" style="margin-top: 1rem; font-size: 0.72rem; color: var(--slate-500); line-height: 1.45; text-align: justify;">
+          SwiftSign creates graphical electronic signatures and business stamps for everyday documents. Acceptance and legal requirements for electronic signatures vary by document type and jurisdiction. SwiftSign does not provide cryptographic digital signatures, certificate-based signing, notarization or legal advice.
+        </div>
+
+        <div style="margin-top: 0.5rem; text-align: center; font-size: 0.68rem; color: var(--slate-400);">
+          Beta Version: Client-side Google Play Billing only. Entitlements are directly verified with Google Play Store on your device.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: 1-Tap Date Stamp Picker -->
+  <div class="modal-overlay" id="date-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>1-Tap Date Stamp</h3>
+        <button id="btn-close-date-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Date Selection Input -->
+        <div style="margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <label for="date-picker-input" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase;">
+              Date:
+            </label>
+            <button type="button" id="btn-date-today" style="background: none; border: none; font-size: 0.75rem; font-weight: 600; color: var(--primary); cursor: pointer; padding: 0.1rem 0.3rem;">
+              Reset to Today
+            </button>
+          </div>
+          <input type="date" id="date-picker-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 0.85rem; font-size: 0.95rem; font-family: inherit; font-weight: 600; color: var(--slate-800); border: 1.5px solid var(--slate-300); border-radius: var(--radius-md); background: #ffffff; outline: none;" />
+        </div>
+
+        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; margin-bottom: 0.4rem;">
+          Format:
+        </label>
+        <div class="date-format-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+          <button type="button" class="date-choice-btn active" data-format="medium" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1.5px solid var(--primary); background: var(--primary-light); border-radius: var(--radius-md); font-weight: 600; cursor: pointer; text-align: left;">
+            <span style="font-size: 0.95rem; color: var(--slate-900);" id="date-preview-medium">18 Nov 2026</span>
+            <span style="font-size: 0.75rem; color: var(--slate-500); background: #ffffff; padding: 0.2rem 0.5rem; border-radius: 4px;">Standard</span>
+          </button>
+          <button type="button" class="date-choice-btn" data-format="slash_dmy" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1.5px solid var(--slate-200); background: #ffffff; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; text-align: left;">
+            <span style="font-size: 0.95rem; color: var(--slate-900);" id="date-preview-dmy">18/11/2026</span>
+            <span style="font-size: 0.75rem; color: var(--slate-500); background: var(--slate-100); padding: 0.2rem 0.5rem; border-radius: 4px;">DD/MM/YYYY</span>
+          </button>
+          <button type="button" class="date-choice-btn" data-format="slash_mdy" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1.5px solid var(--slate-200); background: #ffffff; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; text-align: left;">
+            <span style="font-size: 0.95rem; color: var(--slate-900);" id="date-preview-mdy">11/18/2026</span>
+            <span style="font-size: 0.75rem; color: var(--slate-500); background: var(--slate-100); padding: 0.2rem 0.5rem; border-radius: 4px;">MM/DD/YYYY</span>
+          </button>
+          <button type="button" class="date-choice-btn" data-format="iso" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border: 1.5px solid var(--slate-200); background: #ffffff; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; text-align: left;">
+            <span style="font-size: 0.95rem; color: var(--slate-900);" id="date-preview-iso">2026-11-18</span>
+            <span style="font-size: 0.75rem; color: var(--slate-500); background: var(--slate-100); padding: 0.2rem 0.5rem; border-radius: 4px;">ISO (YYYY-MM-DD)</span>
+          </button>
+        </div>
+
+        <!-- Style & Ink Color Row -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.25rem; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
+          <!-- Font Style -->
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; margin-bottom: 0.35rem;">
+              Font Style:
+            </label>
+            <div class="segmented-toggle-group" id="date-style-group">
+              <button type="button" class="segmented-toggle-btn active" data-bold="false">Regular</button>
+              <button type="button" class="segmented-toggle-btn" data-bold="true">Bold</button>
+            </div>
+          </div>
+
+          <!-- Ink Color -->
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; margin-bottom: 0.35rem;">
+              Ink Color:
+            </label>
+            <div style="display: flex; gap: 0.75rem; padding-top: 0.15rem;" id="date-color-picker">
+              <div class="date-color-dot active" data-color="#0f172a" style="width: 28px; height: 28px; border-radius: 50%; background: #0f172a; cursor: pointer;"></div>
+              <div class="date-color-dot" data-color="#2563eb" style="width: 28px; height: 28px; border-radius: 50%; background: #2563eb; cursor: pointer;"></div>
+              <div class="date-color-dot" data-color="#dc2626" style="width: 28px; height: 28px; border-radius: 50%; background: #dc2626; cursor: pointer;"></div>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-place-date-stamp" class="btn-primary-action" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
+          Place Date on Document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Text / Name -->
+  <div class="modal-overlay" id="text-modal">
+    <div class="modal-card" style="max-width: 460px;">
+      <div class="modal-header">
+        <h3>Add Text / Name</h3>
+        <button id="btn-close-text-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.4rem;">
+            Type Text or Name:
+          </label>
+          <input type="text" id="text-stamp-input" placeholder="e.g. John Doe, Director" style="width: 100%; box-sizing: border-box; padding: 0.75rem; font-size: 1rem; border: 1.5px solid var(--slate-300); border-radius: var(--radius-md); outline: none;" />
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; margin-bottom: 0.4rem;">
+            Quick Templates:
+          </label>
+          <div class="quick-chip-container" style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            <button type="button" class="template-chip" data-text="Authorized Signatory">Authorized Signatory</button>
+            <button type="button" class="template-chip" data-text="Approved">Approved</button>
+            <button type="button" class="template-chip" data-text="Managing Director">Managing Director</button>
+            <button type="button" class="template-chip" data-text="Verified">Verified</button>
+          </div>
+        </div>
+
+        <!-- Style & Ink Color Row -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.25rem; align-items: flex-start; justify-content: space-between; flex-wrap: wrap;">
+          <!-- Font Style -->
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; margin-bottom: 0.35rem;">
+              Font Style:
+            </label>
+            <div class="segmented-toggle-group" id="text-style-group">
+              <button type="button" class="segmented-toggle-btn active" data-bold="false">Regular</button>
+              <button type="button" class="segmented-toggle-btn" data-bold="true">Bold</button>
+            </div>
+          </div>
+
+          <!-- Ink Color -->
+          <div>
+            <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; margin-bottom: 0.35rem;">
+              Ink Color:
+            </label>
+            <div style="display: flex; gap: 0.75rem; padding-top: 0.15rem;" id="text-color-picker">
+              <div class="text-color-dot active" data-color="#0f172a" style="width: 28px; height: 28px; border-radius: 50%; background: #0f172a; cursor: pointer;"></div>
+              <div class="text-color-dot" data-color="#2563eb" style="width: 28px; height: 28px; border-radius: 50%; background: #2563eb; cursor: pointer;"></div>
+              <div class="text-color-dot" data-color="#dc2626" style="width: 28px; height: 28px; border-radius: 50%; background: #dc2626; cursor: pointer;"></div>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-place-text-stamp" class="btn-primary-action" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
+          Place on Document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Official Company Stamp & Seal Generator -->
+  <div class="modal-overlay" id="company-stamp-modal">
+    <div class="modal-card stamp-modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <h3 style="margin: 0; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
+            <span>🏢</span> Company Stamp & Seal Generator
+          </h3>
+          <span class="card-pill pill-primary" style="font-size: 0.65rem;">1800px HQ PNG</span>
+        </div>
+        <button id="btn-close-company-stamp-modal" class="btn-close-modal">✕</button>
+      </div>
+
+      <!-- Top Fixed / Sticky Live Preview (Always visible) -->
+      <div class="stamp-fixed-preview-bar">
+        <div class="stamp-live-preview-box">
+          <div class="stamp-preview-tag">LIVE PREVIEW (TRANSPARENT PNG)</div>
+          <div class="stamp-canvas-wrapper">
+            <canvas id="company-stamp-preview" width="300" height="300"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable Form Body -->
+      <div class="modal-body stamp-modal-body">
+        
+        <!-- Place on Document Top Button (Shown when a document is open) -->
+        <div id="stamp-place-on-doc-top-container" style="margin-bottom: 0.75rem; display: none;">
+          <button type="button" id="btn-place-company-stamp-top" class="btn-primary-action" style="width: 100%; justify-content: center; padding: 0.75rem; font-size: 0.95rem; font-weight: 700;">
+            🏢 Place Stamp on Current Document
+          </button>
+        </div>
+
+        <!-- SECTION 1: Company Details -->
+        <div class="stamp-form-section">
+          <div class="stamp-section-header">Company Details</div>
+
+          <!-- Company Profile Selector (Phase 5) -->
+          <div style="margin-bottom: 0.65rem; background: #f8fafc; border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 0.5rem 0.65rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+              <label for="stamp-profile-select" style="font-size: 0.7rem; font-weight: 700; color: var(--slate-600); text-transform: uppercase;">
+                Company Profile:
+              </label>
+              <button type="button" id="btn-save-as-profile" style="background: none; border: none; font-size: 0.7rem; color: var(--brand-blue); font-weight: 600; cursor: pointer; padding: 0;">
+                💾 Save As Profile
+              </button>
+            </div>
+            <div style="display: flex; gap: 0.4rem;">
+              <select id="stamp-profile-select" style="flex: 1; padding: 0.4rem 0.5rem; font-size: 0.82rem; font-weight: 600; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none; background: #fff;">
+                <option value="current">Current Stamp Settings</option>
+              </select>
+              <button type="button" id="btn-add-profile-stamp" class="tool-btn" style="padding: 0.35rem 0.65rem; font-size: 0.78rem; font-weight: 700;" title="Create new profile (PRO)">
+                + New
+              </button>
+            </div>
+          </div>
+
+          <!-- Company Name (Handles up to 60 chars) -->
+          <div style="margin-bottom: 0.65rem;">
+            <label for="stamp-company-input" style="display: block; font-size: 0.72rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem;">
+              Company / Organization Name (Up to 60 characters):
+            </label>
+            <input type="text" id="stamp-company-input" maxlength="60" value="ACME TECHNOLOGIES PVT. LTD." placeholder="e.g. ACME TECHNOLOGIES PRIVATE LIMITED" style="width: 100%; box-sizing: border-box; padding: 0.55rem 0.65rem; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none;" />
+          </div>
+
+          <!-- Designation / Center Text -->
+          <div style="margin-bottom: 0.65rem;">
+            <label for="stamp-designation-input" style="display: block; font-size: 0.72rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem;">
+              Center Title / Designation:
+            </label>
+            <input type="text" id="stamp-designation-input" value="AUTHORIZED SIGNATORY" placeholder="e.g. AUTHORIZED SIGNATORY" style="width: 100%; box-sizing: border-box; padding: 0.55rem 0.65rem; font-size: 0.88rem; font-weight: 600; text-transform: uppercase; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none;" />
+          </div>
+
+          <!-- City / Location / Subtext & Registration Number -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.65rem;">
+            <div>
+              <label for="stamp-subtext-input" style="display: block; font-size: 0.72rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem;">
+                City / Location:
+              </label>
+              <input type="text" id="stamp-subtext-input" value="MUMBAI 400001" placeholder="e.g. MUMBAI 400001" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.6rem; font-size: 0.84rem; font-weight: 600; text-transform: uppercase; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none;" />
+            </div>
+            <div>
+              <label for="stamp-reg-input" style="display: block; font-size: 0.72rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem;">
+                Reg No / CIN:
+              </label>
+              <input type="text" id="stamp-reg-input" value="" placeholder="CIN / GST / Reg No" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.6rem; font-size: 0.84rem; font-weight: 600; text-transform: uppercase; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none;" />
+            </div>
+          </div>
+
+          <!-- Date Option -->
+          <div style="background: #f8fafc; border: 1px solid var(--slate-200); border-radius: var(--radius-sm); padding: 0.5rem 0.65rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 600; color: var(--slate-700); cursor: pointer;">
+              <input type="checkbox" id="stamp-include-date" checked style="accent-color: var(--primary);" />
+              <span>Include Today's Date in Stamp</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Stamp Appearance -->
+        <div class="stamp-form-section">
+          <div class="stamp-section-header">Stamp Appearance</div>
+
+          <!-- Shape Selector -->
+          <div style="margin-bottom: 0.65rem;">
+            <label style="display: block; font-size: 0.72rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.25rem;">
+              Shape:
+            </label>
+            <div class="segmented-toggle-group" id="stamp-shape-group">
+              <button type="button" class="segmented-toggle-btn active" data-shape="round">● Round</button>
+              <button type="button" class="segmented-toggle-btn" data-shape="rectangle">■ Rectangular</button>
+            </div>
+          </div>
+
+          <!-- Ink Color -->
+          <div style="margin-bottom: 0.65rem;">
+            <label style="display: block; font-size: 0.72rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.35rem;">
+              Ink Color:
+            </label>
+            <div style="display: flex; gap: 0.65rem;" id="stamp-color-picker">
+              <div class="stamp-color-dot active" data-color="#1d4ed8" title="Rubber Stamp Blue" style="width: 28px; height: 28px; border-radius: 50%; background: #1d4ed8; cursor: pointer;"></div>
+              <div class="stamp-color-dot" data-color="#581c87" title="Official Violet" style="width: 28px; height: 28px; border-radius: 50%; background: #581c87; cursor: pointer;"></div>
+              <div class="stamp-color-dot" data-color="#b91c1c" title="Stamp Red" style="width: 28px; height: 28px; border-radius: 50%; background: #b91c1c; cursor: pointer;"></div>
+              <div class="stamp-color-dot" data-color="#0f172a" title="Charcoal Black" style="width: 28px; height: 28px; border-radius: 50%; background: #0f172a; cursor: pointer;"></div>
+              <div class="stamp-color-dot" data-color="#047857" title="Forest Green" style="width: 28px; height: 28px; border-radius: 50%; background: #047857; cursor: pointer;"></div>
+            </div>
+          </div>
+
+          <!-- Collapsible More Options (Border style, text size, finish) -->
+          <details class="stamp-advanced-details" id="stamp-more-options">
+            <summary class="stamp-advanced-summary">
+              <span>⚙️ More options (Border, Text Size, Finish)</span>
+            </summary>
+            <div class="stamp-advanced-content">
+              <div>
+                <label style="display: block; font-size: 0.7rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.25rem;">
+                  Border Style:
+                </label>
+                <div class="segmented-toggle-group" id="stamp-border-group">
+                  <button type="button" class="segmented-toggle-btn active" data-border="double">Double</button>
+                  <button type="button" class="segmented-toggle-btn" data-border="single">Single</button>
+                  <button type="button" class="segmented-toggle-btn" data-border="heavy">Heavy</button>
+                </div>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.7rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.25rem;">
+                  Text Size:
+                </label>
+                <div class="segmented-toggle-group" id="stamp-textsize-group">
+                  <button type="button" class="segmented-toggle-btn" data-size="sm">Small</button>
+                  <button type="button" class="segmented-toggle-btn active" data-size="md">Medium</button>
+                  <button type="button" class="segmented-toggle-btn" data-size="lg">Large</button>
+                </div>
+              </div>
+
+              <div>
+                <label style="display: block; font-size: 0.7rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.25rem;">
+                  Finish / Style:
+                </label>
+                <div class="segmented-toggle-group" id="stamp-finish-group">
+                  <button type="button" class="segmented-toggle-btn active" data-style="distressed">Ink-Pad</button>
+                  <button type="button" class="segmented-toggle-btn" data-style="clean">Sharp Vector</button>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- SECTION 3: Templates (11 Available) -->
+        <div class="stamp-form-section">
+          <div class="stamp-section-header">Templates (11 Available)</div>
+          <div class="stamp-template-chips-grid" id="stamp-templates-container">
+            <button type="button" class="stamp-template-btn active" data-id="authorized_signatory" data-desig="AUTHORIZED SIGNATORY" data-sub="OFFICIAL SEAL" data-color="#1d4ed8" data-shape="round">✍️ Authorized Signatory</button>
+            <button type="button" class="stamp-template-btn" data-id="director" data-desig="DIRECTOR" data-sub="OFFICIAL BUSINESS SEAL" data-color="#1d4ed8" data-shape="round">👔 Director</button>
+            <button type="button" class="stamp-template-btn" data-id="for_company" data-desig="AUTHORIZED SIGNATORY" data-sub="PARTNER / DIRECTOR" data-color="#1d4ed8" data-shape="rectangle">🏢 For [Company Name]</button>
+            <button type="button" class="stamp-template-btn" data-id="approved" data-desig="APPROVED" data-sub="VERIFIED & VALID" data-color="#047857" data-shape="round">🟢 Approved</button>
+            <button type="button" class="stamp-template-btn" data-id="verified" data-desig="VERIFIED" data-sub="COMPLIANCE CHECKED" data-color="#047857" data-shape="round">✓ Verified</button>
+            <button type="button" class="stamp-template-btn" data-id="received" data-desig="RECEIVED" data-sub="DOCUMENT OFFICE" data-color="#1d4ed8" data-shape="rectangle">📥 Received</button>
+            <button type="button" class="stamp-template-btn" data-id="paid" data-desig="PAID" data-sub="ACCOUNTS DEPARTMENT" data-color="#b91c1c" data-shape="rectangle">🔴 Paid</button>
+            <button type="button" class="stamp-template-btn" data-id="rejected" data-desig="REJECTED" data-sub="DOES NOT COMPLY" data-color="#b91c1c" data-shape="rectangle">✕ Rejected</button>
+            <button type="button" class="stamp-template-btn" data-id="accounts_dept" data-desig="ACCOUNTS DEPARTMENT" data-sub="FINANCE & BILLING" data-color="#581c87" data-shape="rectangle">💼 Accounts Dept</button>
+            <button type="button" class="stamp-template-btn" data-id="payment_received" data-desig="PAYMENT RECEIVED" data-sub="WITH THANKS" data-color="#047857" data-shape="rectangle">💰 Payment Received</button>
+            <button type="button" class="stamp-template-btn" data-id="received_with_thanks" data-desig="RECEIVED WITH THANKS" data-sub="OFFICIAL RECEIPT" data-color="#1d4ed8" data-shape="rectangle">🙏 Received with Thanks</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sticky Bottom Action Bar (Export PNG Primary, Share & Save Stamp Secondary) -->
+      <div class="stamp-sticky-footer">
+        <!-- Place on Document Button (When doc is open) -->
+        <div id="stamp-place-on-doc-container" style="display: none; width: 100%; margin-bottom: 0.45rem;">
+          <button id="btn-place-company-stamp" class="btn-primary-action" style="width: 100%; justify-content: center; padding: 0.75rem; font-size: 0.95rem; font-weight: 700;">
+            🏢 Place Stamp on Current Document
+          </button>
+        </div>
+        
+        <div class="stamp-actions-toolbar">
+          <button type="button" id="btn-export-standalone-png" class="btn-primary-action btn-export-primary" title="Export high-resolution transparent PNG (1800px)">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export PNG (1800px)
+          </button>
+          <button type="button" id="btn-share-standalone-stamp" class="tool-btn btn-secondary-stamp" title="Share transparent PNG via WhatsApp / Email">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            Share
+          </button>
+          <button type="button" id="btn-save-stamp-vault" class="tool-btn btn-secondary-stamp" title="Save stamp to device for 1-tap reuse">
+            💾 Save Stamp
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+    </div>
+  </div>
+
+  <!-- Modal: Saved Stamps Manager -->
+  <div class="modal-overlay" id="saved-stamps-modal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <h3 style="margin: 0; font-size: 1.1rem;">🏢 My Saved Stamps</h3>
+          <span class="card-pill pill-primary" id="saved-stamps-count-badge">0 / 1 Saved</span>
+        </div>
+        <button id="btn-close-saved-stamps-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1rem;">
+        <div id="saved-stamps-empty-state" style="text-align: center; padding: 2.5rem 1rem; color: var(--slate-500); display: none;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏢</div>
+          <div style="font-weight: 700; font-size: 1rem; color: var(--slate-800); margin-bottom: 0.25rem;">No Saved Stamps Yet</div>
+          <p style="font-size: 0.85rem; max-width: 320px; margin: 0 auto 1.25rem;">Create a custom company stamp or seal and save it to your device for instant 1-tap access.</p>
+          <button type="button" class="btn-primary-action" id="btn-create-stamp-from-saved" style="margin: 0 auto;">
+            + Create Company Stamp
+          </button>
+        </div>
+        <div class="saved-items-grid" id="saved-stamps-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Saved Signatures Manager -->
+  <div class="modal-overlay" id="saved-signatures-modal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <h3 style="margin: 0; font-size: 1.1rem;">✍️ My Saved Signatures</h3>
+          <span class="card-pill pill-success" id="saved-sigs-count-badge">0 / 1 Saved</span>
+        </div>
+        <button id="btn-close-saved-sigs-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1rem;">
+        <div id="saved-sigs-empty-state" style="text-align: center; padding: 2.5rem 1rem; color: var(--slate-500); display: none;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✍️</div>
+          <div style="font-weight: 700; font-size: 1rem; color: var(--slate-800); margin-bottom: 0.25rem;">No Saved Signatures Yet</div>
+          <p style="font-size: 0.85rem; max-width: 320px; margin: 0 auto 1.25rem;">Draw or scan a handwritten signature to save it for 1-tap signing.</p>
+          <button type="button" class="btn-primary-action" id="btn-draw-sig-from-saved" style="margin: 0 auto;">
+            + Draw Signature
+          </button>
+        </div>
+        <div class="saved-items-grid" id="saved-sigs-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Image to PDF Converter -->
+  <div class="modal-overlay" id="image-to-pdf-modal">
+    <div class="modal-card" style="max-width: 680px; max-height: calc(100dvh - 2rem); display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <h3 style="margin: 0; font-size: 1.1rem;">📷 Image to PDF Converter</h3>
+          <span class="card-pill pill-primary" id="img-to-pdf-count-badge">0 Images</span>
+        </div>
+        <button id="btn-close-img-to-pdf-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1rem; overflow-y: auto;">
+        
+        <!-- Image Selection / Add Dropzone -->
+        <input type="file" id="img-to-pdf-file-input" accept="image/jpeg,image/png,image/webp" multiple style="display:none;" />
+        
+        <div id="img-to-pdf-dropzone" style="border: 2px dashed var(--slate-300); border-radius: var(--radius-md); padding: 1.25rem 1rem; text-align: center; background: #f8fafc; cursor: pointer; margin-bottom: 1rem;">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">📷</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--slate-800);">Tap to Choose Images or Photos</div>
+          <div style="font-size: 0.8rem; color: var(--slate-500); margin-top: 0.15rem;">Select multiple JPG, PNG, or WebP images to combine into one PDF</div>
+        </div>
+
+        <!-- Thumbnails Strip / Reordering List -->
+        <div id="img-to-pdf-list" class="img-thumbnails-grid">
+          <!-- Dynamically populated with thumbnail, page index, move left, move right, remove -->
+        </div>
+
+        <!-- Conversion Settings (Page size, orientation, margin) -->
+        <div style="background: #f8fafc; border: 1.5px solid var(--slate-200); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.35rem;">
+                Page Size:
+              </label>
+              <select id="img-to-pdf-page-size" style="width: 100%; padding: 0.5rem; font-size: 0.9rem; font-weight: 600; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none; background: #fff;">
+                <option value="a4" selected>A4 (Standard 210 x 297 mm)</option>
+                <option value="letter">Letter (US 8.5 x 11 in)</option>
+                <option value="fit">Fit to Image (Natural bounds)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--slate-600); text-transform: uppercase; margin-bottom: 0.35rem;">
+                Orientation:
+              </label>
+              <select id="img-to-pdf-orientation" style="width: 100%; padding: 0.5rem; font-size: 0.9rem; font-weight: 600; border: 1.5px solid var(--slate-300); border-radius: var(--radius-sm); outline: none; background: #fff;">
+                <option value="auto" selected>Auto (Match Image)</option>
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" id="btn-img-to-pdf-open-sign" class="btn-primary-action" style="flex: 2; min-width: 170px; justify-content: center; padding: 0.8rem;">
+            ✍️ Open in Signing Flow
+          </button>
+          <button type="button" id="btn-img-to-pdf-download" class="tool-btn" style="flex: 1; min-width: 120px; justify-content: center; padding: 0.8rem; font-weight: 600;">
+            💾 Save PDF
+          </button>
+          <button type="button" id="btn-img-to-pdf-share" class="tool-btn" style="flex: 1; min-width: 100px; justify-content: center; padding: 0.8rem; font-weight: 600;">
+            Share
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Settings, Profiles & Privacy (Phase 5) -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-card" style="max-width: 620px; max-height: calc(100dvh - 2rem); display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3 style="margin: 0; font-size: 1.1rem;">⚙️ Settings & Data Privacy</h3>
+        <button id="btn-close-settings-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem; overflow-y: auto;">
+        
+        <!-- Section 1: Company Profiles -->
+        <div style="margin-bottom: 1.5rem; background: #f8fafc; border: 1.5px solid var(--slate-200); border-radius: var(--radius-md); padding: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem; color: var(--slate-800);">🏢 Company Profiles</div>
+              <div style="font-size: 0.78rem; color: var(--slate-500);">Multiple profiles require Pro Pass. Free tier includes 1 profile.</div>
+            </div>
+            <button type="button" id="btn-add-new-profile" class="tool-btn" style="padding: 0.4rem 0.75rem; font-size: 0.8rem; font-weight: 700;">
+              + New Profile
+            </button>
+          </div>
+          <div id="settings-profiles-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Dynamically populated profiles list -->
+          </div>
+        </div>
+
+        <!-- Section 2: Recent Documents (Metadata Only) -->
+        <div style="margin-bottom: 1.5rem; background: #f8fafc; border: 1.5px solid var(--slate-200); border-radius: var(--radius-md); padding: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem; color: var(--slate-800);">📄 Recent Documents</div>
+              <div style="font-size: 0.78rem; color: var(--slate-500);">Stores file names and dates only. Never retains document contents.</div>
+            </div>
+            <button type="button" id="btn-clear-recent-docs" class="tool-btn" style="padding: 0.4rem 0.75rem; font-size: 0.78rem; color: var(--rose-600);">
+              Clear Recent Items
+            </button>
+          </div>
+          <div id="settings-recent-docs-list" style="display: flex; flex-direction: column; gap: 0.4rem;">
+            <!-- Dynamically populated recent docs -->
+          </div>
+        </div>
+
+        <!-- Section 3: Privacy & Security Disclosure -->
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.5rem;">
+          <div style="font-weight: 700; font-size: 0.85rem; color: #1e40af; margin-bottom: 0.25rem;">
+            🔒 Privacy by Architecture
+          </div>
+          <div style="font-size: 0.78rem; color: #1e3a8a; line-height: 1.45;">
+            • Documents are processed locally on your device.<br/>
+            • No document uploads to SwiftSign servers.<br/>
+            • Signatures, stamps, and profiles are excluded from Google Drive cloud backups.<br/>
+            • No accounts, analytics SDKs, or advertising trackers.
+          </div>
+        </div>
+
+        <!-- Section 3b: Beta Testing Mode (Pre-Play Console Simulator) -->
+        <div style="margin-bottom: 1.5rem; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: var(--radius-md); padding: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem; color: #166534;">🧪 Beta Test Mode</div>
+              <div style="font-size: 0.78rem; color: #15803d; margin-top: 0.15rem;" id="settings-tier-label">Current Tier: FREE</div>
+            </div>
+            <button type="button" id="btn-settings-toggle-pro" class="tool-btn" style="padding: 0.45rem 0.85rem; font-size: 0.82rem; font-weight: 700; background: #2563eb; color: #ffffff; border: none; border-radius: var(--radius-md); cursor: pointer;">
+              ⚡ Enable Pro (Test)
+            </button>
+          </div>
+          <div style="font-size: 0.74rem; color: #166534; margin-top: 0.5rem; line-height: 1.4;">
+            Allows testing all Pro features (Sign All Pages, Paper Scanner, Multiple Company Profiles) on this device while Google Play products are being configured.
+          </div>
+        </div>
+
+        <!-- Section 4: Data Erasure (Danger Zone) -->
+        <div style="border-top: 1px solid var(--slate-200); padding-top: 1rem; margin-bottom: 1rem;">
+          <button type="button" id="btn-delete-all-data" style="width: 100%; padding: 0.75rem; background: #fff1f2; color: #be123c; border: 1.5px solid #fecdd3; border-radius: var(--radius-md); font-weight: 700; font-size: 0.9rem; cursor: pointer;">
+            🗑️ Delete All My Data (Signatures, Stamps, Profiles & Recents)
+          </button>
+        </div>
+
+        <!-- Mandatory Disclaimer -->
+        <div class="legal-notice" style="font-size: 0.72rem; color: var(--slate-500); line-height: 1.45;">
+          SwiftSign creates graphical electronic signatures and business stamps for everyday documents. Acceptance and legal requirements for electronic signatures vary by document type and jurisdiction. SwiftSign does not provide cryptographic digital signatures, certificate-based signing, notarization or legal advice.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Core Scripts -->
+  <script src="vendor/pdf-lib.min.js"></script>
+  <script type="module">
+    import * as pdfjsLib from './vendor/pdf.min.mjs';
+    window.pdfjsLib = pdfjsLib;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = './vendor/pdf.worker.min.mjs';
+  </script>
+  <script src="src/js/pricing-config.js"></script>
+  <script src="src/js/billing.js"></script>
+  <script src="src/js/storage.js"></script>
+  <script src="src/js/i18n.js"></script>
+  <script src="src/js/coordinate-converter.js"></script>
+  <script src="src/js/canvas-signature.js"></script>
+  <script src="src/js/paper-scanner.js"></script>
+  <script src="src/js/stamp-generator.js"></script>
+  <script src="src/js/image-to-pdf.js"></script>
+  <script src="src/js/placement-manager.js"></script>
+  <script src="src/js/export-engine.js"></script>
+  <script src="src/js/pdf-handler.js"></script>
+  <script src="src/js/image-handler.js"></script>
+  <script src="src/js/app.js"></script>
+</body>
+</html>

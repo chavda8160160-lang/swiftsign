@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Exclude user signatures, stamps, profiles, and billing entitlements from cloud backup -->
+        <exclude domain="sharedpref" path="swiftsign_vault.xml" />
+        <exclude domain="sharedpref" path="swiftsign_entitlement_cache.xml" />
+        <exclude domain="database" path="." />
+        <exclude domain="root" path="." />
+        <exclude domain="file" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <!-- Allow clean on-device transfer if user switches devices, but keep vault private -->
+        <exclude domain="sharedpref" path="swiftsign_vault.xml" />
+    </device-transfer>
+</data-extraction-rules>

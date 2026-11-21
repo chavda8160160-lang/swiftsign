@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude user signatures, stamps, profiles, and billing entitlements from Google Drive Auto Backup -->
+    <exclude domain="sharedpref" path="swiftsign_vault.xml" />
+    <exclude domain="sharedpref" path="swiftsign_entitlement_cache.xml" />
+    <exclude domain="database" path="." />
+    <exclude domain="root" path="." />
+    <exclude domain="file" path="." />
+</full-backup-content>

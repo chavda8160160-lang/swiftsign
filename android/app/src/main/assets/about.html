@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="About SwiftSign - 100% on-device document signing and official company stamp generator.">
+  <title>About SwiftSign - 100% On-Device Signing</title>
+  <link rel="stylesheet" href="src/css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="src/assets/icon.svg">
+</head>
+<body style="min-height: 100vh; display: flex; flex-direction: column; background: var(--slate-50);">
+
+  <header class="app-header">
+    <div class="header-container">
+      <a href="index.html" class="brand" aria-label="SwiftSign Home">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+            <path d="M2 2l7.586 7.586"></path>
+          </svg>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span class="brand-name">SwiftSign</span>
+          <span class="brand-badge">100% Offline & Private</span>
+        </div>
+      </a>
+      <div class="header-actions">
+        <nav class="desktop-nav-links" aria-label="Main Navigation">
+          <a href="plans.html" class="nav-link">Plans</a>
+          <a href="about.html" class="nav-link" style="color: var(--primary);">About</a>
+          <a href="privacy.html" class="nav-link">Privacy</a>
+          <a href="contact.html" class="nav-link">Contact</a>
+        </nav>
+        <a href="index.html" class="btn-back-tool" style="padding: 0.4rem 0.85rem; font-size: 0.85rem;">← Back to Tool</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex: 1;">
+    <div class="static-page-container">
+      <div class="static-back-bar">
+        <a href="index.html" class="btn-back-tool">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back to SwiftSign Tool
+        </a>
+      </div>
+
+      <div class="static-card">
+        <h1>About SwiftSign</h1>
+        <div class="static-subtitle">Fast, local, and private document signing for professionals & small businesses.</div>
+
+        <h2>Why We Built SwiftSign</h2>
+        <p>
+          Signing a simple one-page NDA, job offer, or invoice shouldn't require creating an online account, uploading confidential company contracts to third-party cloud servers, or paying $20/month for a bloated enterprise signing suite.
+        </p>
+        <p>
+          SwiftSign was built with a single mission: <strong>put complete signing power back in the hands of the user, directly on their own device</strong>.
+        </p>
+
+        <h2>Our Core Architecture Commitments</h2>
+        <ul>
+          <li><strong>100% On-Device Local Processing:</strong> Documents never leave your phone or computer. There are zero remote cloud servers processing or storing your files.</li>
+          <li><strong>No Account Required:</strong> You never need to sign up, log in, or give your email address just to sign a document.</li>
+          <li><strong>True Vector PDF Quality:</strong> Unlike basic tools that convert your PDF pages into blurry, low-resolution raster images, SwiftSign injects your signatures and seals directly into the underlying vector PDF streams. Text remains crisp and selectable.</li>
+          <li><strong>Zero Watermarks Forever:</strong> Every document exported by SwiftSign—on both Free and Pro plans—is 100% clean, professional, and free of promotional watermarks.</li>
+          <li><strong>Official Company Stamp & Seal Generator:</strong> Create 1800px high-resolution transparent PNG round seals and rectangular stamps with 11 standard business templates, ready to use on contracts or export to WhatsApp and Word.</li>
+        </ul>
+
+        <h2>Platform Model</h2>
+        <p>
+          SwiftSign on the web is completely <strong>Free forever</strong>. For users on Android who need power features—such as multi-page batch signing ("Sign All Pages"), camera paper signature scanning, and multiple company profile management—SwiftSign offers an optional Pro pass available exclusively through Google Play.
+        </p>
+
+        <h2>Mandatory Legal Disclaimer</h2>
+        <div class="legal-notice" style="background: var(--slate-50); border: 1px solid var(--slate-200); padding: 1rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; color: var(--slate-600); line-height: 1.5; margin-top: 1.5rem;">
+          SwiftSign creates graphical electronic signatures and business stamps for everyday documents. Acceptance and legal requirements for electronic signatures vary by document type and jurisdiction. SwiftSign does not provide cryptographic digital signatures, certificate-based signing, notarization or legal advice.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-claims-row">
+        <span class="footer-claim-badge">🔒 Documents are processed locally on your device</span>
+        <span class="footer-claim-badge">🛡️ No document uploads to SwiftSign servers</span>
+        <span class="footer-claim-badge">👤 No account required</span>
+      </div>
+      <div class="footer-links-row">
+        <a href="plans.html" class="footer-link">Plans</a>
+        <a href="privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="terms.html" class="footer-link">Terms</a>
+        <a href="disclaimer.html" class="footer-link">Disclaimer</a>
+        <a href="about.html" class="footer-link">About</a>
+        <a href="contact.html" class="footer-link">Contact</a>
+        <button type="button" class="btn-get-android-app footer-link" style="background: none; border: none; cursor: pointer; color: var(--primary);">📱 Get the Android app</button>
+      </div>
+      <div class="footer-copyright">
+        © 2026 SwiftSign™. All rights reserved.<br>
+        SwiftSign™ is a graphical electronic signature and business stamp utility.
+      </div>
+    </div>
+  </footer>
+
+  <script src="src/js/pricing-config.js"></script>
+  <script>
+    document.querySelectorAll('.btn-get-android-app').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = (typeof PricingConfig !== 'undefined' && PricingConfig.playStoreUrl) ? PricingConfig.playStoreUrl : '';
+        if (url && url.length > 0) {
+          window.open(url, '_blank');
+        } else {
+          alert('SwiftSign Android App: Coming soon to Google Play!');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
