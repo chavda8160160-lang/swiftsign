@@ -30,7 +30,6 @@ class BillingController {
     }
 
     this.initNativeCallbacks();
-    this.initTestControls();
   }
 
   isTestProMode() {
@@ -62,26 +61,6 @@ class BillingController {
     this.renderPaywallModal();
     if (window.app && typeof window.app.updateProBadges === 'function') {
       window.app.updateProBadges();
-    }
-    if (window.app && typeof window.app.renderSettingsBetaTest === 'function') {
-      window.app.renderSettingsBetaTest();
-    }
-  }
-
-  initTestControls() {
-    if (typeof document === 'undefined') return;
-    const btnToggleTestPro = document.getElementById('btn-toggle-test-pro');
-    if (btnToggleTestPro) {
-      btnToggleTestPro.addEventListener('click', () => {
-        const isPro = typeof StorageManager !== 'undefined' ? StorageManager.isPro() : false;
-        this.setTestProMode(!isPro);
-        const newTier = typeof StorageManager !== 'undefined' ? StorageManager.getUserTier().toUpperCase() : 'FREE';
-        if (window.app && typeof window.app.showToast === 'function') {
-          window.app.showToast(`Switched to ${newTier} (Beta Test Mode)`);
-        }
-        const modal = document.getElementById('pricing-modal');
-        if (modal && !isPro) modal.classList.remove('active');
-      });
     }
   }
 
@@ -262,12 +241,6 @@ class BillingController {
       if (unavailableBanner) unavailableBanner.style.display = 'none';
       if (proMonthlyBtn) proMonthlyBtn.disabled = isProActive;
       if (proAnnualBtn) proAnnualBtn.disabled = isProActive;
-    }
-
-    const btnToggleTestPro = document.getElementById('btn-toggle-test-pro');
-    if (btnToggleTestPro) {
-      btnToggleTestPro.textContent = isProActive ? '✓ Pro Test Active (Switch to Free)' : '⚡ Enable Pro Mode for Testing';
-      btnToggleTestPro.style.background = isProActive ? '#059669' : '#2563eb';
     }
 
     if (freeBtn) {

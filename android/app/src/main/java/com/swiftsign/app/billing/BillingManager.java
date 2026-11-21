@@ -35,7 +35,7 @@ import java.util.Map;
  * Manages client-side purchases, subscriptions, entitlement verification,
  * and offline caching strictly separated from UI logic.
  * 
- * Known Beta Limitation: Client-side Play Billing verification only.
+ * Play Billing Entitlements: Client-side Play Billing verification only.
  * Entitlements are never granted without a verified Play purchase state,
  * and are cached only for offline access.
  */

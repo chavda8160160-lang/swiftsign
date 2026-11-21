@@ -972,7 +972,13 @@ class AppController {
     if (this.btnOpenPricing) {
       this.btnOpenPricing.addEventListener('click', () => {
         if (!StorageManager.isAndroidApp()) {
-          window.location.href = 'plans.html';
+          if (this.webProLockedModal) {
+            const reasonEl = document.getElementById('web-pro-reason-text');
+            if (reasonEl) reasonEl.textContent = 'SwiftSign on Web is 100% Free Forever';
+            this.webProLockedModal.classList.add('active');
+          } else {
+            window.location.href = 'plans.html';
+          }
           return;
         }
         this.refreshPricingUI();
@@ -1142,22 +1148,6 @@ class AppController {
     }
     if (this.btnDeleteAllData) {
       this.btnDeleteAllData.addEventListener('click', () => this.handleDeleteAllData());
-    }
-
-    const btnSettingsTogglePro = document.getElementById('btn-settings-toggle-pro');
-    if (btnSettingsTogglePro) {
-      btnSettingsTogglePro.addEventListener('click', () => {
-        const isPro = typeof StorageManager !== 'undefined' ? StorageManager.isPro() : false;
-        if (window.billingController) {
-          window.billingController.setTestProMode(!isPro);
-        } else {
-          StorageManager.setUserTier(!isPro ? 'pro' : 'free');
-        }
-        this.renderSettingsBetaTest();
-        this.renderProfilesSettings();
-        const newTier = StorageManager.getUserTier().toUpperCase();
-        this.showToast(`Switched to ${newTier} (Beta Test Mode)`);
-      });
     }
   }
 
@@ -1993,6 +1983,18 @@ class AppController {
   }
 
   showPaywall(reason = '') {
+    const isAndroid = typeof StorageManager !== 'undefined' ? StorageManager.isAndroidApp() : false;
+    if (!isAndroid) {
+      if (this.webProLockedModal) {
+        const reasonEl = document.getElementById('web-pro-reason-text');
+        if (reasonEl) {
+          reasonEl.textContent = reason || 'SwiftSign on Web is 100% Free Forever';
+        }
+        this.webProLockedModal.classList.add('active');
+      }
+      return;
+    }
+
     if (window.billingController) {
       window.billingController.showPaywall(reason);
     } else if (this.pricingModal) {
@@ -2452,23 +2454,7 @@ class AppController {
     if (!this.settingsModal) return;
     this.renderProfilesSettings();
     this.renderRecentDocsSettings();
-    this.renderSettingsBetaTest();
     this.settingsModal.classList.add('active');
-  }
-
-  renderSettingsBetaTest() {
-    const tierLabel = document.getElementById('settings-tier-label');
-    const toggleBtn = document.getElementById('btn-settings-toggle-pro');
-    const isPro = typeof StorageManager !== 'undefined' ? StorageManager.isPro() : false;
-    const isTest = window.billingController && typeof window.billingController.isTestProMode === 'function' && window.billingController.isTestProMode();
-
-    if (tierLabel) {
-      tierLabel.textContent = `Current Tier: ${isPro ? 'PRO PASS' : 'FREE'}${isTest ? ' (Test Mode)' : ''}`;
-    }
-    if (toggleBtn) {
-      toggleBtn.textContent = isPro ? 'Switch to Free Mode' : '⚡ Enable Pro (Test)';
-      toggleBtn.style.background = isPro ? '#475569' : '#2563eb';
-    }
   }
 
   renderProfilesSettings() {

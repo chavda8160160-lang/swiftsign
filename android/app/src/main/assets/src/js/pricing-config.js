@@ -8,7 +8,7 @@
  * - Web is Free only: Pro is available in the Android app only. Pro on Android does not unlock Pro on the web.
  * - Free tier: basic PDF signing, 1 saved signature, 1 saved company stamp, standard templates, transparent PNG export (1800px), PDF export, NO watermark, NO ads.
  * - Pro tier (Android only): unlimited saved signatures and stamps, multiple company profiles, paper signature scanner, multi-page "Sign All Pages", advanced templates and customization.
- * - Beta limitation: Client-side Play Billing on Android only (no backend). Entitlements come from Play Billing, never from backed-up local data.
+ * - Architecture: Client-side Play Billing on Android only (no backend). Entitlements come from Play Billing, never from backed-up local data.
  */
 
 const PricingConfig = {
@@ -73,10 +73,7 @@ const PricingConfig = {
   legalDisclaimer: 'SwiftSign creates graphical electronic signatures and business stamps for everyday documents. Acceptance and legal requirements for electronic signatures vary by document type and jurisdiction. SwiftSign does not provide cryptographic digital signatures, certificate-based signing, notarization or legal advice.',
 
   // Platform note
-  platformNotice: 'Pro is available in the Android app only. Pro on Android does not unlock Pro on the web.',
-
-  // Beta limitation note
-  betaLimitation: 'Beta Version: Client-side Google Play Billing only. Entitlements are directly verified with Google Play Store on your device.'
+  platformNotice: 'Pro is available in the Android app only. Pro on Android does not unlock Pro on the web.'
 };
 
 if (typeof module !== 'undefined' && module.exports) {
