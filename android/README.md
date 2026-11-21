@@ -5,7 +5,7 @@ This is the native Android project for **SwiftSign**.
 ## How to Open in Android Studio:
 1. Open **Android Studio**.
 2. Click **Open** (or `File > Open...`).
-3. Select this folder: `D:\Yogesh\Personal\New folder (2)\android`
+3. Select the `android` folder in this repository.
 4. Wait for Gradle Sync to complete.
 
 ## How to Run:

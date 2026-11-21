@@ -15,7 +15,7 @@ const PricingConfig = {
   // Application Information
   appName: 'SwiftSign',
   version: '1.0.0',
-  supportEmail: 'support@swiftsign.app',
+  supportEmail: 'support@swiftsign.in',
   playStoreUrl: '', // Set when Play Store listing is live; displays "Coming soon" when empty
 
   // Google Play Billing Product IDs (Android App Only)
