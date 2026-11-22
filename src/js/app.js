@@ -130,6 +130,16 @@ class AppController {
     this.webProLockedModal = document.getElementById('web-pro-locked-modal');
     this.btnCloseWebProLocked = document.getElementById('btn-close-web-pro-locked');
 
+    // Password Protected PDF Modal
+    this.passwordModal = document.getElementById('password-modal');
+    this.btnClosePasswordModal = document.getElementById('btn-close-password-modal');
+    this.pdfPasswordInput = document.getElementById('pdf-password-input');
+    this.btnTogglePasswordVisibility = document.getElementById('btn-toggle-password-visibility');
+    this.pdfPasswordError = document.getElementById('pdf-password-error');
+    this.btnCancelPassword = document.getElementById('btn-cancel-password');
+    this.btnSubmitPassword = document.getElementById('btn-submit-password');
+    this.pdfPasswordCallback = null;
+
     // Quick Tool: Company Stamp
     this.btnQuickCompanyStamp = document.getElementById('btn-quick-company-stamp');
     this.companyStampModal = document.getElementById('company-stamp-modal');
@@ -249,6 +259,9 @@ class AppController {
       onLoaded: (info) => {
         this.updatePageControls(info.currentPage, info.totalPages);
         this.placementManager.setCurrentPage(1);
+      },
+      onPassword: (updatePasswordCallback, reason) => {
+        this.handlePdfPasswordRequired(updatePasswordCallback, reason);
       }
     });
 
@@ -1004,6 +1017,32 @@ class AppController {
       });
     }
 
+    // Password Protected PDF Modal
+    if (this.btnSubmitPassword) {
+      this.btnSubmitPassword.addEventListener('click', () => this.submitPdfPassword());
+    }
+    if (this.pdfPasswordInput) {
+      this.pdfPasswordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.submitPdfPassword();
+        }
+      });
+    }
+    if (this.btnCancelPassword) {
+      this.btnCancelPassword.addEventListener('click', () => this.cancelPdfPassword());
+    }
+    if (this.btnClosePasswordModal) {
+      this.btnClosePasswordModal.addEventListener('click', () => this.cancelPdfPassword());
+    }
+    if (this.btnTogglePasswordVisibility && this.pdfPasswordInput) {
+      this.btnTogglePasswordVisibility.addEventListener('click', () => {
+        const isPassword = this.pdfPasswordInput.type === 'password';
+        this.pdfPasswordInput.type = isPassword ? 'text' : 'password';
+        this.btnTogglePasswordVisibility.textContent = isPassword ? '🙈' : '👁️';
+      });
+    }
+
     // Navigation Drawer (Hamburger)
     if (this.btnOpenMenu && this.navDrawer && this.navDrawerOverlay) {
       this.btnOpenMenu.addEventListener('click', () => {
@@ -1237,6 +1276,8 @@ class AppController {
 
   resetToWelcome() {
     this.closeExportModal();
+    if (this.passwordModal) this.passwordModal.classList.remove('active');
+    if (this.pdfHandler) this.pdfHandler.currentPassword = null;
     if (this.pricingModal) this.pricingModal.classList.remove('active');
     if (this.sigModal) this.closeSigModal();
     if (this.dateModal) this.dateModal.classList.remove('active');
@@ -1266,6 +1307,54 @@ class AppController {
         console.warn('clearInboundCache failed:', e);
       }
     }
+  }
+
+  handlePdfPasswordRequired(updatePasswordCallback, reason) {
+    this.pdfPasswordCallback = updatePasswordCallback;
+    if (this.pdfPasswordError) {
+      if (reason === 2) {
+        this.pdfPasswordError.textContent = 'Incorrect password. Please try again.';
+        this.pdfPasswordError.style.display = 'block';
+      } else {
+        this.pdfPasswordError.style.display = 'none';
+      }
+    }
+    if (this.pdfPasswordInput) {
+      this.pdfPasswordInput.value = '';
+      setTimeout(() => this.pdfPasswordInput.focus(), 150);
+    }
+    if (this.passwordModal) {
+      this.passwordModal.classList.add('active');
+    }
+  }
+
+  submitPdfPassword() {
+    const pwd = (this.pdfPasswordInput ? this.pdfPasswordInput.value : '').trim();
+    if (!pwd) {
+      if (this.pdfPasswordError) {
+        this.pdfPasswordError.textContent = 'Please enter a password';
+        this.pdfPasswordError.style.display = 'block';
+      }
+      return;
+    }
+    if (this.pdfPasswordError) this.pdfPasswordError.style.display = 'none';
+    if (this.pdfPasswordCallback) {
+      const cb = this.pdfPasswordCallback;
+      this.pdfPasswordCallback = null;
+      if (this.passwordModal) this.passwordModal.classList.remove('active');
+      this.showToast('Unlocking document...');
+      cb(pwd);
+    }
+  }
+
+  cancelPdfPassword() {
+    if (this.pdfPasswordCallback) {
+      const cb = this.pdfPasswordCallback;
+      this.pdfPasswordCallback = null;
+      try { cb(new Error('Password cancelled')); } catch (e) {}
+    }
+    if (this.passwordModal) this.passwordModal.classList.remove('active');
+    this.resetToWelcome();
   }
 
   getFormattedToday() {
@@ -1929,15 +2018,19 @@ class AppController {
       let result;
 
       if (this.currentDocType === 'pdf') {
+        const docPassword = this.pdfHandler ? this.pdfHandler.currentPassword : null;
         result = await ExportEngine.exportPdf({
           originalPdfBytes: this.originalPdfBytes,
-          placements: placements
+          placements: placements,
+          pdfJsDoc: this.pdfHandler ? this.pdfHandler.pdfDoc : null,
+          password: docPassword
         });
         result.filename = this.currentFileName.replace(/\.pdf$/i, '') + '-signed.pdf';
         result.mimeType = 'application/pdf';
         if (this.btnDownloadLabel) this.btnDownloadLabel.textContent = 'Download Signed PDF';
         const kb = Math.round(result.size / 1024);
-        this.exportMetaText.textContent = `${result.filename} (${kb} KB) • 100% Vector Quality • No Watermark`;
+        const lockNote = docPassword ? ' • Protected with Original Password' : ' • 100% Vector Quality';
+        this.exportMetaText.textContent = `${result.filename} (${kb} KB)${lockNote} • No Watermark`;
       } else {
         const isJpg = this.imageMimeType === 'image/jpeg' || this.imageMimeType === 'image/jpg' || /\.jpe?g$/i.test(this.currentFileName);
         const isWebp = this.imageMimeType === 'image/webp' || /\.webp$/i.test(this.currentFileName);

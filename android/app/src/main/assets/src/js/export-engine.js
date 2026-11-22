@@ -18,7 +18,7 @@ class ExportEngine {
    * @param {Function} [params.onProgress]
    * @returns {Promise<{ bytes: Uint8Array, blob: Blob, blobUrl: string, size: number }>}
    */
-  static async exportPdf({ originalPdfBytes, placements, onProgress }) {
+  static async exportPdf({ originalPdfBytes, placements, onProgress, pdfJsDoc = null, password = null }) {
     if (typeof PDFLib === 'undefined') {
       throw new Error('PDF-lib is not loaded');
     }
@@ -29,75 +29,202 @@ class ExportEngine {
 
     if (onProgress) onProgress(10, 'Loading original PDF structure...');
 
-    // 1. Load document (preserves existing text, vector paths, fonts)
-    const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes, {
-      ignoreEncryption: true
-    });
-    const totalPages = pdfDoc.getPageCount();
+    try {
+      // 1. Attempt vector overlay with pdf-lib. Do not use ignoreEncryption
+      // because saving an encrypted document in pdf-lib corrupts the encryption dictionary.
+      const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+      const totalPages = pdfDoc.getPageCount();
 
-    if (onProgress) onProgress(30, 'Embedding signature assets...');
+      if (onProgress) onProgress(30, 'Embedding signature assets...');
 
-    // Cache embedded images so identical signatures aren't duplicated in file size
+      // Cache embedded images so identical signatures aren't duplicated in file size
+      const imageCache = new Map();
+
+      // 2. Iterate through placements and overlay onto pages
+      for (let i = 0; i < placements.length; i++) {
+        const p = placements[i];
+        const pageIndex = p.pageNumber - 1;
+
+        if (pageIndex < 0 || pageIndex >= totalPages) {
+          console.warn(`Skipping placement on invalid page ${p.pageNumber}`);
+          continue;
+        }
+
+        const page = pdfDoc.getPage(pageIndex);
+        const pageWidth = page.getWidth();
+        const pageHeight = page.getHeight();
+        const pageRotation = page.getRotation().angle || 0;
+
+        // Get or create embedded PNG image
+        let embeddedImage = imageCache.get(p.dataUrl);
+        if (!embeddedImage) {
+          const pngBytes = ExportEngine.dataUrlToUint8Array(p.dataUrl);
+          embeddedImage = await pdfDoc.embedPng(pngBytes);
+          imageCache.set(p.dataUrl, embeddedImage);
+        }
+
+        // Convert coordinates
+        const coords = _CoordConverter.screenToPdf({
+          pageWidth,
+          pageHeight,
+          pageRotation,
+          renderedWidth: p.renderedWidth,
+          renderedHeight: p.renderedHeight,
+          placement: {
+            x: p.x,
+            y: p.y,
+            width: p.width,
+            height: p.height,
+            rotation: p.rotation || 0
+          }
+        });
+
+        // Draw onto page object stream
+        page.drawImage(embeddedImage, {
+          x: coords.x,
+          y: coords.y,
+          width: coords.width,
+          height: coords.height,
+          rotate: PDFLib.degrees(coords.rotateDegrees)
+        });
+      }
+
+      if (onProgress) onProgress(70, 'Preserving vector streams and finalizing PDF...');
+
+      // 3. Save modified PDF
+      let savedBytes = await pdfDoc.save();
+
+      // Re-encrypt with original password if provided
+      if (password && typeof PdfEncrypt !== 'undefined' && typeof PDFLib !== 'undefined') {
+        try {
+          if (onProgress) onProgress(98, 'Protecting signed document with original password...');
+          PdfEncrypt.configure(PDFLib);
+          savedBytes = await PdfEncrypt.lock(savedBytes, password);
+        } catch (lockErr) {
+          console.warn('Could not re-encrypt document with password:', lockErr);
+        }
+      }
+
+      // 4. Validate output
+      ExportEngine.validatePdfBytes(savedBytes, totalPages);
+
+      if (onProgress) onProgress(100, 'Complete!');
+
+      const blob = new Blob([savedBytes], { type: 'application/pdf' });
+      const blobUrl = URL.createObjectURL(blob);
+
+      return {
+        bytes: savedBytes,
+        blob,
+        blobUrl,
+        size: savedBytes.length
+      };
+    } catch (err) {
+      const isEncrypted = err && (
+        err.name === 'EncryptedPDFError' ||
+        (err.message && err.message.toLowerCase().includes('encrypted'))
+      );
+
+      if (isEncrypted && pdfJsDoc) {
+        console.warn('PDF is encrypted; using high-res PDF.js compositing fallback:', err);
+        return await ExportEngine.exportEncryptedPdfWithPdfJs({ pdfJsDoc, placements, onProgress, password });
+      }
+
+      throw err;
+    }
+  }
+
+  /**
+   * Fallback export for encrypted/password-protected PDFs that cannot be directly modified by pdf-lib
+   */
+  static async exportEncryptedPdfWithPdfJs({ pdfJsDoc, placements, onProgress, password = null }) {
+    const { PDFDocument } = PDFLib;
+    const newDoc = await PDFDocument.create();
+    const totalPages = pdfJsDoc.numPages;
     const imageCache = new Map();
 
-    // 2. Iterate through placements and overlay onto pages
-    for (let i = 0; i < placements.length; i++) {
-      const p = placements[i];
-      const pageIndex = p.pageNumber - 1;
-
-      if (pageIndex < 0 || pageIndex >= totalPages) {
-        console.warn(`Skipping placement on invalid page ${p.pageNumber}`);
-        continue;
+    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+      if (onProgress) {
+        onProgress(20 + Math.floor((pageNum / totalPages) * 60), `Rendering unlocked page ${pageNum} of ${totalPages}...`);
       }
+      const page = await pdfJsDoc.getPage(pageNum);
+      
+      // Render page at 2.0x scale (high print quality)
+      const viewport = page.getViewport({ scale: 2.0 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
 
-      const page = pdfDoc.getPage(pageIndex);
-      const pageWidth = page.getWidth();
-      const pageHeight = page.getHeight();
-      const pageRotation = page.getRotation().angle || 0;
+      await page.render({
+        canvasContext: ctx,
+        viewport,
+        annotationMode: (typeof window !== 'undefined' && window.pdfjsLib && typeof window.pdfjsLib.AnnotationMode !== 'undefined')
+          ? window.pdfjsLib.AnnotationMode.DISABLE
+          : 0
+      }).promise;
 
-      // Get or create embedded PNG image
-      let embeddedImage = imageCache.get(p.dataUrl);
-      if (!embeddedImage) {
-        const pngBytes = ExportEngine.dataUrlToUint8Array(p.dataUrl);
-        embeddedImage = await pdfDoc.embedPng(pngBytes);
-        imageCache.set(p.dataUrl, embeddedImage);
-      }
+      const imgDataUrl = canvas.toDataURL('image/jpeg', 0.94);
+      const imgBytes = ExportEngine.dataUrlToUint8Array(imgDataUrl);
+      const embeddedBg = await newDoc.embedJpg(imgBytes);
 
-      // Convert coordinates
-      const coords = _CoordConverter.screenToPdf({
-        pageWidth,
-        pageHeight,
-        pageRotation,
-        renderedWidth: p.renderedWidth,
-        renderedHeight: p.renderedHeight,
-        placement: {
-          x: p.x,
-          y: p.y,
-          width: p.width,
-          height: p.height,
-          rotation: p.rotation || 0
+      const unscaled = page.getViewport({ scale: 1.0 });
+      const newPage = newDoc.addPage([unscaled.width, unscaled.height]);
+      newPage.drawImage(embeddedBg, {
+        x: 0,
+        y: 0,
+        width: unscaled.width,
+        height: unscaled.height
+      });
+
+      // Overlay signatures on top as lossless PNGs with exact coordinate conversion
+      const pagePlacements = placements.filter(p => p.pageNumber === pageNum);
+      for (const p of pagePlacements) {
+        let embeddedSig = imageCache.get(p.dataUrl);
+        if (!embeddedSig) {
+          const pngBytes = ExportEngine.dataUrlToUint8Array(p.dataUrl);
+          embeddedSig = await newDoc.embedPng(pngBytes);
+          imageCache.set(p.dataUrl, embeddedSig);
         }
-      });
 
-      // Draw onto page object stream
-      page.drawImage(embeddedImage, {
-        x: coords.x,
-        y: coords.y,
-        width: coords.width,
-        height: coords.height,
-        rotate: PDFLib.degrees(coords.rotateDegrees)
-      });
+        const coords = _CoordConverter.screenToPdf({
+          pageWidth: unscaled.width,
+          pageHeight: unscaled.height,
+          pageRotation: 0,
+          renderedWidth: p.renderedWidth,
+          renderedHeight: p.renderedHeight,
+          placement: {
+            x: p.x,
+            y: p.y,
+            width: p.width,
+            height: p.height,
+            rotation: p.rotation || 0
+          }
+        });
+
+        newPage.drawImage(embeddedSig, {
+          x: coords.x,
+          y: coords.y,
+          width: coords.width,
+          height: coords.height,
+          rotate: PDFLib.degrees(coords.rotateDegrees)
+        });
+      }
     }
 
-    if (onProgress) onProgress(70, 'Preserving vector streams and finalizing PDF...');
+    if (onProgress) onProgress(95, 'Finalizing signed document...');
+    let savedBytes = await newDoc.save();
 
-    // 3. Save modified PDF
-    const savedBytes = await pdfDoc.save();
-
-    // 4. Validate output
-    ExportEngine.validatePdfBytes(savedBytes, totalPages);
-
-    if (onProgress) onProgress(100, 'Complete!');
+    // Re-encrypt with original password if document was password-protected
+    if (password && typeof PdfEncrypt !== 'undefined' && typeof PDFLib !== 'undefined') {
+      try {
+        if (onProgress) onProgress(98, 'Protecting signed document with original password...');
+        PdfEncrypt.configure(PDFLib);
+        savedBytes = await PdfEncrypt.lock(savedBytes, password);
+      } catch (lockErr) {
+        console.warn('Could not re-encrypt document with password:', lockErr);
+      }
+    }
 
     const blob = new Blob([savedBytes], { type: 'application/pdf' });
     const blobUrl = URL.createObjectURL(blob);

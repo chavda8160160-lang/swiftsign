@@ -4,10 +4,11 @@
  */
 
 class PdfHandler {
-  constructor({ containerElement, onPageChanged, onLoaded }) {
+  constructor({ containerElement, onPageChanged, onLoaded, onPassword }) {
     this.container = containerElement;
     this.onPageChanged = onPageChanged;
     this.onLoaded = onLoaded;
+    this.onPassword = onPassword;
 
     this.pdfDoc = null;
     this.originalBytes = null;
@@ -15,14 +16,16 @@ class PdfHandler {
     this.totalPages = 0;
     this.scale = 1.0;
     this.currentRenderTask = null;
+    this.currentPassword = null;
 
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
     this.container.appendChild(this.canvas);
   }
 
-  async loadFromBytes(arrayBuffer) {
+  async loadFromBytes(arrayBuffer, password = null) {
     try {
+      this.currentPassword = password;
       // Clone buffer so PDF.js worker transfer does not detach caller's buffer
       const dataCopy = arrayBuffer.slice ? arrayBuffer.slice(0) : new Uint8Array(arrayBuffer).slice().buffer;
       this.originalBytes = new Uint8Array(dataCopy);
@@ -36,11 +39,32 @@ class PdfHandler {
         window.pdfjsLib.GlobalWorkerOptions.workerSrc = './vendor/pdf.worker.min.mjs';
       }
 
-      const loadingTask = window.pdfjsLib.getDocument({
+      const params = {
         data: dataCopy,
         cMapPacked: true,
         enableXfa: false
-      });
+      };
+      if (password) {
+        params.password = password;
+        this.currentPassword = password;
+      }
+
+      const loadingTask = window.pdfjsLib.getDocument(params);
+
+      // Handle password protected PDFs seamlessly
+      loadingTask.onPassword = (updatePassword, reason) => {
+        // reason: 1 = NEED_PASSWORD, 2 = INCORRECT_PASSWORD
+        if (this.onPassword) {
+          this.onPassword((pwd) => {
+            if (typeof pwd === 'string') {
+              this.currentPassword = pwd;
+            }
+            updatePassword(pwd);
+          }, reason);
+        } else {
+          updatePassword(new Error('Password required'));
+        }
+      };
 
       this.pdfDoc = await loadingTask.promise;
       this.totalPages = this.pdfDoc.numPages;
@@ -111,7 +135,10 @@ class PdfHandler {
 
       const renderContext = {
         canvasContext: this.ctx,
-        viewport: renderViewport
+        viewport: renderViewport,
+        annotationMode: (window.pdfjsLib && typeof window.pdfjsLib.AnnotationMode !== 'undefined')
+          ? window.pdfjsLib.AnnotationMode.DISABLE
+          : 0
       };
 
       this.currentRenderTask = page.render(renderContext);

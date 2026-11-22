@@ -14,5 +14,8 @@
     "offline"
   ],
   "author": "SwiftSign",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "pdf-lib-encrypt": "^1.0.3"
+  }
 }

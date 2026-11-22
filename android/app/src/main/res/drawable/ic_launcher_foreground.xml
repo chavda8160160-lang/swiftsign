@@ -4,17 +4,27 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Quill / Signature Pen Icon -->
+    <!-- Signature Pen Nib Body -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M54,28 C50,34 44,45 42,54 C40,61 38,68 35,76 L40,78 C44,70 48,64 53,58 C57,53 64,44 68,36 C72,28 66,24 54,28 Z" />
+        android:pathData="M60.5,33.5 L74.5,47.5 L58.5,63.5 L44.5,49.5 Z" />
+
+    <!-- Pen Nib Tip -->
     <path
         android:fillColor="#E0E7FF"
-        android:pathData="M35,76 L32,83 L39,80 Z" />
+        android:pathData="M44.5,49.5 L58.5,63.5 L46.5,75.5 L34.5,77.5 L36.5,65.5 Z" />
+
+    <!-- Pen Slit & Breather Hole -->
+    <path
+        android:strokeColor="#2563EB"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M34.5,77.5 L51.5,60.5" />
+
     <!-- Signature swoosh underneath -->
     <path
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="3.5"
+        android:strokeWidth="4"
         android:strokeLineCap="round"
-        android:pathData="M30,85 C42,83 60,86 78,81" />
+        android:pathData="M26,86 C38,82 56,88 82,78" />
 </vector>

@@ -9,10 +9,11 @@
   <meta name="description"
     content="Add your signature to PDFs and images with zero quality loss. 100% client-side, completely private, no account required, no watermark.">
   <meta name="theme-color" content="#2563eb">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="src/css/styles.css">
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563eb%22/><text y=%2268%22 x=%2218%22 font-size=%2260%22>✍️</text></svg>">
 </head>
 
 <body>
@@ -506,6 +507,50 @@
           <button type="button" class="btn-primary-action btn-get-android-app"
             style="width: 100%; justify-content: center; min-height: 48px; font-size: 0.95rem; font-weight: 700;">
             📱 Get the Android App on Google Play
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Password Protected PDF -->
+  <div class="modal-overlay" id="password-modal">
+    <div class="modal-card" style="max-width: 440px; text-align: center;">
+      <div class="modal-header">
+        <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🔒</span> Protected PDF
+        </h3>
+        <button id="btn-close-password-modal" class="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem 1.25rem;">
+        <div
+          style="width: 56px; height: 56px; margin: 0 auto 1rem; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: #2563eb;">
+          🔑
+        </div>
+        <h4 style="margin: 0 0 0.4rem; font-size: 1.1rem; color: var(--slate-900);">Document is Password Protected</h4>
+        <p style="font-size: 0.85rem; color: var(--slate-600); margin: 0 0 1.25rem; line-height: 1.5;">
+          This document requires a password to open and sign (e.g. birth date, PAN, or account password):
+        </p>
+
+        <div style="position: relative; margin-bottom: 0.75rem;">
+          <input type="password" id="pdf-password-input" class="tool-input" placeholder="Enter document password"
+            style="width: 100%; box-sizing: border-box; padding: 0.75rem 2.8rem 0.75rem 0.85rem; font-size: 1rem; height: 46px; border: 1.5px solid var(--slate-300); border-radius: var(--radius-md); outline: none;">
+          <button type="button" id="btn-toggle-password-visibility"
+            style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--slate-500); padding: 4px;"
+            title="Show/Hide Password">👁️</button>
+        </div>
+
+        <div id="pdf-password-error"
+          style="display: none; color: #dc2626; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.75rem; background: #fef2f2; border: 1px solid #fecaca; padding: 0.4rem; border-radius: 4px;">
+          Incorrect password. Please try again.
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+          <button type="button" id="btn-cancel-password" class="tool-btn" style="flex: 1; justify-content: center; min-height: 44px;">
+            Cancel
+          </button>
+          <button type="button" id="btn-submit-password" class="btn-primary-action" style="flex: 1.5; justify-content: center; min-height: 44px; font-weight: 700;">
+            Unlock Document
           </button>
         </div>
       </div>
@@ -1473,6 +1518,7 @@
 
   <!-- Core Scripts -->
   <script src="vendor/pdf-lib.min.js"></script>
+  <script src="vendor/pdf-lib-encrypt.js"></script>
   <script type="module">
     import * as pdfjsLib from './vendor/pdf.min.mjs';
     window.pdfjsLib = pdfjsLib;
