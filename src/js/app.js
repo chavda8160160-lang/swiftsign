@@ -285,7 +285,7 @@ class AppController {
 
     if (this.cardSignPdf) {
       this.cardSignPdf.addEventListener('click', () => {
-        this.fileInput.accept = 'application/pdf';
+        this.fileInput.accept = '.pdf,application/pdf';
         this.fileInput.click();
       });
     }
@@ -293,7 +293,7 @@ class AppController {
     if (this.cardStampPdf) {
       this.cardStampPdf.addEventListener('click', () => {
         this.autoOpenStampOnLoad = true;
-        this.fileInput.accept = 'application/pdf';
+        this.fileInput.accept = '.pdf,application/pdf';
         this.fileInput.click();
       });
     }
@@ -353,17 +353,22 @@ class AppController {
     }
 
     // File Selection
-    this.dropzone.addEventListener('click', () => {
-      this.fileInput.accept = 'application/pdf,image/png,image/jpeg,image/webp';
+    this.dropzone.addEventListener('click', (e) => {
+      // Avoid double-triggering on iOS when tapping the <label for="file-input"> or Try Sample button
+      if (e.target.closest('label, button, a, input')) return;
+      this.fileInput.accept = '.pdf,application/pdf,.png,.jpg,.jpeg,.webp,image/*';
       this.fileInput.multiple = true;
       this.fileInput.click();
     });
     this.fileInput.addEventListener('change', (e) => {
       const files = Array.from(e.target.files || []);
+      // Reset input so re-selecting the same file works on iOS Safari
+      this.fileInput.value = '';
+      this.fileInput.accept = '.pdf,application/pdf,.png,.jpg,.jpeg,.webp,image/*';
       if (files.length === 1) {
         this.loadFile(files[0]);
       } else if (files.length > 1) {
-        const allImages = files.every(f => f.type.startsWith('image/') || /\.(jpe?g|png|webp)$/i.test(f.name));
+        const allImages = files.every(f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name));
         if (allImages) {
           this.openImageToPdfModal();
           this.addImageToPdfFiles(files);
@@ -402,7 +407,8 @@ class AppController {
     });
 
     // Try Sample Document
-    this.btnTrySample.addEventListener('click', async () => {
+    this.btnTrySample.addEventListener('click', async (e) => {
+      e.stopPropagation();
       try {
         this.showToast('Loading sample document...');
         const res = await fetch('./sample-document.pdf');
@@ -1194,7 +1200,17 @@ class AppController {
     try {
       this.currentFileName = file.name || 'document.pdf';
       const ext = (file.name || '').split('.').pop().toLowerCase();
-      const buffer = await file.arrayBuffer();
+      let buffer;
+      if (typeof file.arrayBuffer === 'function') {
+        buffer = await file.arrayBuffer();
+      } else {
+        buffer = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error || new Error('Failed to read file'));
+          reader.readAsArrayBuffer(file);
+        });
+      }
       const bytes = new Uint8Array(buffer);
 
       // Check for PDF signature (%PDF)
@@ -1204,7 +1220,7 @@ class AppController {
 
       if (isPdf) {
         await this.loadPdfBuffer(buffer);
-      } else if (['jpg', 'jpeg', 'png', 'webp'].includes(ext) || (file.type && file.type.startsWith('image/'))) {
+      } else if (['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'].includes(ext) || (file.type && file.type.startsWith('image/'))) {
         await this.loadImageFile(file);
       } else {
         alert('Unsupported file format. Please upload a PDF, JPG, or PNG.');
