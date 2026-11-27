@@ -39,7 +39,9 @@ class ImageHandler {
         }
         resolve();
       };
-      this.imgElement.onerror = reject;
+      this.imgElement.onerror = () => {
+        reject(new Error('Could not open image. If this is an iPhone HEIC photo, please save or share it as JPG/PNG or PDF.'));
+      };
       this.imgElement.src = url;
     });
   }

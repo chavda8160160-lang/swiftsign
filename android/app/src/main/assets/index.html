@@ -14,6 +14,20 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="src/css/styles.css">
+  <script>
+    // Polyfill Promise.withResolvers for iOS < 17.4 (required by PDF.js)
+    if (typeof Promise !== 'undefined' && typeof Promise.withResolvers !== 'function') {
+      window.__needsPdfWorkerPolyfill = true;
+      Promise.withResolvers = function () {
+        var resolve, reject;
+        var promise = new Promise(function (res, rej) {
+          resolve = res;
+          reject = rej;
+        });
+        return { promise: promise, resolve: resolve, reject: reject };
+      };
+    }
+  </script>
 </head>
 
 <body>

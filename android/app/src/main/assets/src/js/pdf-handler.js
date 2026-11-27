@@ -42,7 +42,8 @@ class PdfHandler {
       const params = {
         data: dataCopy,
         cMapPacked: true,
-        enableXfa: false
+        enableXfa: false,
+        disableWorker: Boolean(window.__needsPdfWorkerPolyfill)
       };
       if (password) {
         params.password = password;

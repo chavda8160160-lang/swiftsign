@@ -360,21 +360,27 @@ class AppController {
       this.fileInput.multiple = true;
       this.fileInput.click();
     });
-    this.fileInput.addEventListener('change', (e) => {
+    this.fileInput.addEventListener('change', async (e) => {
       const files = Array.from(e.target.files || []);
-      // Reset input so re-selecting the same file works on iOS Safari
-      this.fileInput.value = '';
-      this.fileInput.accept = '.pdf,application/pdf,.png,.jpg,.jpeg,.webp,image/*';
-      if (files.length === 1) {
-        this.loadFile(files[0]);
-      } else if (files.length > 1) {
-        const allImages = files.every(f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name));
-        if (allImages) {
-          this.openImageToPdfModal();
-          this.addImageToPdfFiles(files);
-        } else {
-          this.loadFile(files[0]);
+      if (files.length === 0) return;
+
+      this.showToast('Opening document...');
+      try {
+        if (files.length === 1) {
+          await this.loadFile(files[0]);
+        } else if (files.length > 1) {
+          const allImages = files.every(f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name));
+          if (allImages) {
+            this.openImageToPdfModal();
+            this.addImageToPdfFiles(files);
+          } else {
+            await this.loadFile(files[0]);
+          }
         }
+      } finally {
+        // Reset input AFTER file is read so iOS doesn't invalidate the File handle
+        this.fileInput.value = '';
+        this.fileInput.accept = '.pdf,application/pdf,.png,.jpg,.jpeg,.webp,image/*';
       }
     });
 
@@ -1200,6 +1206,13 @@ class AppController {
     try {
       this.currentFileName = file.name || 'document.pdf';
       const ext = (file.name || '').split('.').pop().toLowerCase();
+
+      // Fast path for images: avoid reading huge iPhone photos into ArrayBuffer unnecessarily
+      if (['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'].includes(ext) || (file.type && file.type.startsWith('image/'))) {
+        await this.loadImageFile(file);
+        return;
+      }
+
       let buffer;
       if (typeof file.arrayBuffer === 'function') {
         buffer = await file.arrayBuffer();
@@ -1220,14 +1233,12 @@ class AppController {
 
       if (isPdf) {
         await this.loadPdfBuffer(buffer);
-      } else if (['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'].includes(ext) || (file.type && file.type.startsWith('image/'))) {
-        await this.loadImageFile(file);
       } else {
         alert('Unsupported file format. Please upload a PDF, JPG, or PNG.');
       }
     } catch (err) {
       console.error('loadFile error:', err);
-      this.showToast('Could not load file: ' + err.message);
+      this.showToast('Could not load file: ' + (err && err.message ? err.message : 'Unknown error'));
     }
   }
 
