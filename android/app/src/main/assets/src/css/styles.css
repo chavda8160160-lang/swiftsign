@@ -2482,6 +2482,12 @@ body.is-single-page .sig-batch-pill {
   margin-bottom: 1.25rem;
 }
 
+@media (max-width: 768px) {
+  .footer-links-row {
+    display: none;
+  }
+}
+
 .footer-link {
   color: var(--slate-600);
   text-decoration: none;
